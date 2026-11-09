@@ -63,6 +63,10 @@ def get_common_context():
 def serve_custom_static(filename):
     return send_from_directory(app.static_folder, filename)
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return f"DEBUG 404: path={request.path}, path_info={request.environ.get('PATH_INFO')}, qs={request.environ.get('QUERY_STRING')}", 404
+
 @app.route("/")
 def index():
     ctx = get_common_context()
