@@ -24,6 +24,7 @@ from src.project_manager import (
 from src.data_loader import inspect_csv_schema
 
 import tempfile
+import urllib.parse
 
 if "MPLCONFIGDIR" not in os.environ:
     os.environ["MPLCONFIGDIR"] = os.path.join(tempfile.gettempdir(), "matplotlib_churnguide")
@@ -35,6 +36,34 @@ app = Flask(
     static_folder=os.path.join(BASE_DIR, "static")
 )
 app.secret_key = "churnguide_secure_local_dev_key_2026"
+
+class VercelPathFix:
+    def __init__(self, wsgi_app):
+        self.wsgi_app = wsgi_app
+
+    def __call__(self, environ, start_response):
+        qs = environ.get('QUERY_STRING', '')
+        if '__route__' in qs:
+            params = urllib.parse.parse_qs(qs)
+            if '__route__' in params and params['__route__']:
+                route = params['__route__'][0]
+                cleaned = {k: v for k, v in params.items() if k != '__route__'}
+                environ['QUERY_STRING'] = urllib.parse.urlencode(cleaned, doseq=True)
+                environ['PATH_INFO'] = route if route.startswith('/') else ('/' + route)
+        else:
+            path = environ.get('PATH_INFO', '')
+            for prefix in ['/api/index.py', '/api/index', '/api']:
+                if path.startswith(prefix):
+                    new_path = path[len(prefix):]
+                    environ['PATH_INFO'] = new_path if new_path.startswith('/') else ('/' + new_path)
+                    break
+
+        if not environ.get('PATH_INFO') or environ.get('PATH_INFO') in ['/api/index', '/api/index.py', '/api']:
+            environ['PATH_INFO'] = '/'
+
+        return self.wsgi_app(environ, start_response)
+
+app.wsgi_app = VercelPathFix(app.wsgi_app)
 
 if os.environ.get("VERCEL") or not os.access(BASE_DIR, os.W_OK):
     UPLOAD_DIR = os.path.join(tempfile.gettempdir(), "churnguide_uploads")
@@ -62,10 +91,6 @@ def get_common_context():
 @app.route("/static/<path:filename>")
 def serve_custom_static(filename):
     return send_from_directory(app.static_folder, filename)
-
-@app.errorhandler(404)
-def page_not_found(e):
-    return f"DEBUG 404: path={request.path}, path_info={request.environ.get('PATH_INFO')}, qs={request.environ.get('QUERY_STRING')}", 404
 
 @app.route("/")
 def index():
