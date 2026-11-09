@@ -59,6 +59,16 @@ def get_common_context():
         "active_id": get_active_project_id()
     }
 
+@app.route("/debug_environ")
+def debug_environ():
+    return jsonify({
+        "path_info": request.environ.get("PATH_INFO"),
+        "query_string": request.environ.get("QUERY_STRING"),
+        "headers": dict(request.headers),
+        "x_matched_path": request.environ.get("HTTP_X_MATCHED_PATH"),
+        "x_forwarded_uri": request.environ.get("HTTP_X_FORWARDED_URI")
+    })
+
 @app.route("/")
 @app.route("/api/index.py")
 @app.route("/api/index")
