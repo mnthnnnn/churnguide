@@ -92,6 +92,15 @@ def get_common_context():
 def serve_custom_static(filename):
     return send_from_directory(app.static_folder, filename)
 
+@app.route("/static/<path:filename>")
+def serve_custom_static(filename):
+    return send_from_directory(app.static_folder, filename)
+
+@app.errorhandler(500)
+def internal_error(e):
+    import traceback
+    return f"<pre>{traceback.format_exc()}</pre>", 500
+
 @app.route("/")
 def index():
     ctx = get_common_context()
