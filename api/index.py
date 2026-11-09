@@ -1,5 +1,6 @@
 import os
 import sys
+import urllib.parse
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_DIR = os.path.join(BASE_DIR, "01_Project", "ChurnGuide_BTech_Project")
@@ -14,12 +15,25 @@ class VercelPathFix:
         self.wsgi_app = wsgi_app
 
     def __call__(self, environ, start_response):
-        path = environ.get('PATH_INFO', '')
-        for prefix in ['/api/index.py', '/api/index', '/api']:
-            if path.startswith(prefix):
-                new_path = path[len(prefix):]
-                environ['PATH_INFO'] = new_path if new_path.startswith('/') else ('/' + new_path)
-                break
+        qs = environ.get('QUERY_STRING', '')
+        if '__route__' in qs:
+            params = urllib.parse.parse_qs(qs)
+            if '__route__' in params and params['__route__']:
+                route = params['__route__'][0]
+                cleaned = {k: v for k, v in params.items() if k != '__route__'}
+                environ['QUERY_STRING'] = urllib.parse.urlencode(cleaned, doseq=True)
+                environ['PATH_INFO'] = route if route.startswith('/') else ('/' + route)
+        else:
+            matched = environ.get('HTTP_X_MATCHED_PATH') or environ.get('HTTP_X_FORWARDED_URI')
+            if matched:
+                environ['PATH_INFO'] = matched
+            else:
+                path = environ.get('PATH_INFO', '')
+                for prefix in ['/api/index.py', '/api/index', '/api']:
+                    if path.startswith(prefix):
+                        new_path = path[len(prefix):]
+                        environ['PATH_INFO'] = new_path if new_path.startswith('/') else ('/' + new_path)
+                        break
         if not environ.get('PATH_INFO'):
             environ['PATH_INFO'] = '/'
         return self.wsgi_app(environ, start_response)
