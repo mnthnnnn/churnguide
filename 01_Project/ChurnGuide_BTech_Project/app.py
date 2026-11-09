@@ -373,7 +373,11 @@ def predict():
         for col in categorical_features:
             form_values[col] = request.form.get(col, baseline_values.get(col, "")).strip()
 
-        prediction_result = active_proj.explain_customer(form_values)
+        try:
+            prediction_result = active_proj.explain_customer(form_values)
+        except Exception as e:
+            flash(f"Note: {str(e)}", "info")
+            prediction_result = None
 
     # Build quick preset sample rows for instantaneous one-click testing
     dataset = active_proj.get_dataset()
