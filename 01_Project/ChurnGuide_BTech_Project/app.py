@@ -60,6 +60,9 @@ def get_common_context():
     }
 
 @app.route("/")
+@app.route("/api/index.py")
+@app.route("/api/index")
+@app.route("/api")
 def index():
     ctx = get_common_context()
     return render_template("index.html", **ctx)
