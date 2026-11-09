@@ -2,11 +2,7 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/static/(.*)",
-      "destination": "/static/$1"
-    },
-    {
-      "source": "/(.*)",
+      "source": "/((?!static/).*)",
       "destination": "/api/index?__route__=/$1"
     }
   ]
