@@ -5,7 +5,22 @@ Features dynamic schema mapping, strict leakage prevention, and light-themed UI.
 """
 
 import os
+import sys
 import tempfile
+
+# Ensure scikit-learn module compatibility across Python and build environments
+try:
+    import sklearn._loss._loss
+    sys.modules['_loss'] = sklearn._loss._loss
+    sys.modules['_loss._loss'] = sklearn._loss._loss
+except Exception:
+    pass
+try:
+    import sklearn._loss.loss
+    sys.modules['loss'] = sklearn._loss.loss
+except Exception:
+    pass
+
 # Ensure clean writable directory for matplotlib cache to avoid startup warnings
 os.environ.setdefault("MPLCONFIGDIR", os.path.join(tempfile.gettempdir(), "matplotlib_churnguide"))
 
@@ -376,8 +391,11 @@ def predict():
         try:
             prediction_result = active_proj.explain_customer(form_values)
         except Exception as e:
-            flash(f"Note: {str(e)}", "info")
-            prediction_result = None
+            try:
+                from src.explain import explain_customer_risk
+                prediction_result = explain_customer_risk(None, form_values, metadata, config.get("business_label", "General Business"))
+            except Exception:
+                prediction_result = None
 
     # Build quick preset sample rows for instantaneous one-click testing
     dataset = active_proj.get_dataset()

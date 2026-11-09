@@ -2,6 +2,19 @@ import os
 import sys
 import urllib.parse
 
+# Ensure scikit-learn module compatibility across Python and build environments
+try:
+    import sklearn._loss._loss
+    sys.modules['_loss'] = sklearn._loss._loss
+    sys.modules['_loss._loss'] = sklearn._loss._loss
+except Exception:
+    pass
+try:
+    import sklearn._loss.loss
+    sys.modules['loss'] = sklearn._loss.loss
+except Exception:
+    pass
+
 CURRENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if CURRENT_DIR not in sys.path:
     sys.path.insert(0, CURRENT_DIR)
