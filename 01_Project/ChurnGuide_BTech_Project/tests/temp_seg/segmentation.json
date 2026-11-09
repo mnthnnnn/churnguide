@@ -1,0 +1,4 @@
+{
+  "available": false,
+  "reason": "Customer segmentation requires at least two continuous numerical metrics with meaningful variation to establish multi-dimensional cluster centroids. Single-dimension or purely categorical datasets cannot be clustered geometrically without fabricating pseudo-distances. Consult univariate distributions on the Customer Analytics page."
+}

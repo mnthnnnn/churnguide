@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-center">
+  <h1 class="header-title">Your results</h1>
+  <p class="header-subtitle">Customers ranked by estimated churn risk.</p>
+</div>
+
+<!-- Stepper -->
+<div class="stepper">
+  <div class="step-item step-completed">
+    <div class="step-circle">&#10003;</div>
+    <span class="step-label" style="color: var(--primary);">Add data</span>
+  </div>
+  <div class="step-line completed"></div>
+  <div class="step-item step-completed">
+    <div class="step-circle">&#10003;</div>
+    <span class="step-label" style="color: var(--primary);">Check columns</span>
+  </div>
+  <div class="step-line completed"></div>
+  <div class="step-item step-active">
+    <div class="step-circle">3</div>
+    <span class="step-label">See results</span>
+  </div>
+</div>
+
+<div class="card">
+  <!-- 4 Clean KPI Tiles -->
+  <div class="kpi-grid">
+    <div class="kpi-tile">
+      <div class="kpi-label">Customers</div>
+      <div class="kpi-value">{{ "{:,}".format(metadata.total_customers) }}</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">Model</div>
+      <div class="kpi-value" style="font-size: 22px; color: #166534; padding-top: 4px;">{{ metadata.winner_model }}</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">Accuracy</div>
+      <div class="kpi-value">{{ "{:.1f}%".format(metadata.test_metrics.accuracy * 100) }}</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">ROC-AUC</div>
+      <div class="kpi-value" style="color: #0fa37f;">{{ "{:.3f}".format(metadata.test_metrics.roc_auc) }}</div>
+    </div>
+  </div>
+
+  <!-- Results 2-Column Split -->
+  <div class="results-split" style="margin-top: 24px;">
+    <!-- Left Column: Most At Risk Customers -->
+    <div class="results-col">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 class="results-col-title" style="margin-bottom: 0;">Most at risk</h3>
+        <span style="font-size: 12px; color: #6b7280;">Sample Preview</span>
+      </div>
+
+      <div class="data-table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Customer Identifier</th>
+              <th>Predicted Risk</th>
+              <th>Risk Level</th>
+              <th>Actual Outcome</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cust in at_risk_preview %}
+            <tr>
+              <td style="font-weight: 600;">{{ cust.id }}</td>
+              <td style="font-weight: 700;">{{ cust.probability }}</td>
+              <td>
+                <span class="badge {{ cust.badge_class }}">{{ cust.level }}</span>
+              </td>
+              <td>
+                <span style="font-size: 12px; color: #4b5563;">{{ cust.actual }}</span>
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="4" style="text-align: center; color: #9ca3af; padding: 24px;">No customer preview data available.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right Column: Top Risk Factors -->
+    <div class="results-col">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 class="results-col-title" style="margin-bottom: 0;">General risk factors</h3>
+        <span style="font-size: 12px; color: #6b7280;">Top Drivers</span>
+      </div>
+
+      <div class="risk-factors-container">
+        {% set max_imp = metadata.top_features[0].importance if metadata.top_features and metadata.top_features|length > 0 else 0.1 %}
+        {% for factor in metadata.top_features[:8] %}
+        {% set width_pct = (factor.importance / (max_imp if max_imp > 0 else 0.001) * 100)|round %}
+        <div class="risk-bar-group">
+          <div class="risk-bar-header">
+            <span style="font-weight: 600;">{{ factor.feature }}</span>
+            <span style="color: var(--text-muted); font-size: 12px;">{{ "{:.4f}".format(factor.importance) }}</span>
+          </div>
+          <div class="risk-bar-bg">
+            <div class="risk-bar-fill" style="width: {{ width_pct if width_pct > 3 else 3 }}%;"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Card Action Buttons -->
+  <div class="card-footer" style="margin-top: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+    <div style="display: flex; gap: 12px;">
+      <a href="{{ url_for('predict') }}" class="btn btn-primary">Check one customer &rarr;</a>
+      <a href="{{ url_for('bulk') }}" class="btn btn-secondary">Bulk score CSV</a>
+    </div>
+    <div style="display: flex; gap: 12px;">
+      <a href="{{ url_for('analytics') }}" class="btn btn-outline">Customer analytics</a>
+      <a href="{{ url_for('segments') }}" class="btn btn-outline">Customer segments</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

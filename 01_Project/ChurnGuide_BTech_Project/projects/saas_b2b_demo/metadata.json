@@ -1,0 +1,176 @@
+{
+  "winner_model": "Logistic Regression",
+  "best_hyperparameters": "C=0.1",
+  "cv_scores": {
+    "Logistic Regression": {
+      "mean_auc": 0.7084,
+      "std_auc": 0.039,
+      "params": "C=0.1"
+    },
+    "Random Forest": {
+      "mean_auc": 0.6996,
+      "std_auc": 0.0297,
+      "params": "max_depth=5, n_estimators=50"
+    },
+    "Gradient Boosting": {
+      "mean_auc": 0.6956,
+      "std_auc": 0.0269,
+      "params": "learning_rate=0.05, max_depth=3, n_estimators=50"
+    }
+  },
+  "test_metrics": {
+    "accuracy": 0.6542,
+    "precision": 0.6049,
+    "recall": 0.49,
+    "f1": 0.5414,
+    "roc_auc": 0.6894
+  },
+  "confusion_matrix": {
+    "tn": 108,
+    "fp": 32,
+    "fn": 51,
+    "tp": 49,
+    "total": 240
+  },
+  "train_rows": 960,
+  "test_rows": 240,
+  "churn_rate_train": 0.4156,
+  "churn_rate_test": 0.4167,
+  "feature_columns": [
+    "Contract_Age_Months",
+    "User_Licenses",
+    "Monthly_Spend",
+    "Weekly_Active_Users",
+    "Support_Tickets_90d",
+    "Feature_Adoption_Score",
+    "Plan_Tier",
+    "Company_Size",
+    "Billing_Cycle",
+    "Payment_Method",
+    "Auto_Renew"
+  ],
+  "numeric_features": [
+    "Contract_Age_Months",
+    "User_Licenses",
+    "Monthly_Spend",
+    "Weekly_Active_Users",
+    "Support_Tickets_90d",
+    "Feature_Adoption_Score"
+  ],
+  "categorical_features": [
+    "Plan_Tier",
+    "Company_Size",
+    "Billing_Cycle",
+    "Payment_Method",
+    "Auto_Renew"
+  ],
+  "permutation_importance": [
+    {
+      "feature": "Contract_Age_Months",
+      "mean_decrease": 0.09839,
+      "std_error": 0.01469,
+      "is_numeric": true
+    },
+    {
+      "feature": "Billing_Cycle",
+      "mean_decrease": 0.04561,
+      "std_error": 0.02435,
+      "is_numeric": false
+    },
+    {
+      "feature": "Feature_Adoption_Score",
+      "mean_decrease": 0.02679,
+      "std_error": 0.02908,
+      "is_numeric": true
+    },
+    {
+      "feature": "Auto_Renew",
+      "mean_decrease": 0.01489,
+      "std_error": 0.01251,
+      "is_numeric": false
+    },
+    {
+      "feature": "Monthly_Spend",
+      "mean_decrease": 0.00935,
+      "std_error": 0.00345,
+      "is_numeric": true
+    },
+    {
+      "feature": "Plan_Tier",
+      "mean_decrease": 0.00645,
+      "std_error": 0.0035,
+      "is_numeric": false
+    },
+    {
+      "feature": "Company_Size",
+      "mean_decrease": 0.00418,
+      "std_error": 0.00269,
+      "is_numeric": false
+    },
+    {
+      "feature": "Weekly_Active_Users",
+      "mean_decrease": 0.00082,
+      "std_error": 0.00055,
+      "is_numeric": true
+    },
+    {
+      "feature": "Support_Tickets_90d",
+      "mean_decrease": -0.00049,
+      "std_error": 0.0004,
+      "is_numeric": true
+    },
+    {
+      "feature": "Payment_Method",
+      "mean_decrease": -0.00059,
+      "std_error": 0.00316,
+      "is_numeric": false
+    },
+    {
+      "feature": "User_Licenses",
+      "mean_decrease": -0.00111,
+      "std_error": 0.0033,
+      "is_numeric": true
+    }
+  ],
+  "baseline_values": {
+    "Contract_Age_Months": 10.0,
+    "User_Licenses": 18.0,
+    "Monthly_Spend": 491.39,
+    "Weekly_Active_Users": 10.0,
+    "Support_Tickets_90d": 3.0,
+    "Feature_Adoption_Score": 65.45,
+    "Plan_Tier": "Starter",
+    "Company_Size": "11-50",
+    "Billing_Cycle": "Monthly",
+    "Payment_Method": "Credit Card",
+    "Auto_Renew": "Yes"
+  },
+  "category_levels": {
+    "Plan_Tier": [
+      "Professional",
+      "Enterprise",
+      "Starter"
+    ],
+    "Company_Size": [
+      "51-200",
+      "11-50",
+      "201-1000",
+      "1-10",
+      "1000+"
+    ],
+    "Billing_Cycle": [
+      "Annual",
+      "Monthly"
+    ],
+    "Payment_Method": [
+      "Credit Card",
+      "Direct Debit",
+      "Invoice"
+    ],
+    "Auto_Renew": [
+      "No",
+      "Yes"
+    ]
+  },
+  "disclaimer": "Metrics evaluated on a held-out cross-sectional test partition. Associations represent general statistical sensitivity, not verified causal mechanisms. Operational forecasting requires longitudinal temporal evaluation."
+}

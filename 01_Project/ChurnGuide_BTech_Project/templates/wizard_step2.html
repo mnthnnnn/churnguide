@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-center">
+  <h1 class="header-title">Map columns &amp; configure model</h1>
+  <p class="header-subtitle">Confirm schema, target column, and anti-leakage boundary before training.</p>
+</div>
+
+<!-- Stepper -->
+<div class="stepper">
+  <div class="step-item step-completed">
+    <div class="step-circle">&#10003;</div>
+    <span class="step-label" style="color: var(--primary);">Add data</span>
+  </div>
+  <div class="step-line completed"></div>
+  <div class="step-item step-active">
+    <div class="step-circle">2</div>
+    <span class="step-label">Check columns</span>
+  </div>
+  <div class="step-line"></div>
+  <div class="step-item step-inactive">
+    <div class="step-circle">3</div>
+    <span class="step-label">See results</span>
+  </div>
+</div>
+
+<div class="card">
+  <form id="step2-form" action="{{ url_for('wizard_step2') }}" method="POST">
+    
+    <!-- Dataset Summary Ribbon -->
+    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px 18px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <span style="font-size: 13px; font-weight: 700; color: #166534;">Detected Dataset:</span>
+        <span style="font-size: 13px; color: #15803d; margin-left: 6px;">{{ schema_info.total_rows }} rows &bull; {{ schema_info.total_columns }} columns</span>
+      </div>
+      <div style="font-size: 12px; color: #166534;">
+        <span>Stratified 80/20 train/test split with 5-fold CV will be applied</span>
+      </div>
+    </div>
+
+    <!-- Configuration Panels Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+      <!-- Project Metadata -->
+      <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px;">
+        <h3 style="font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;">1. Business Context</h3>
+        <div class="form-group" style="margin-bottom: 10px;">
+          <label style="font-size: 12px; font-weight: 600; color: #4b5563;">Project Name</label>
+          <input type="text" name="project_name" class="form-control" value="{{ session_meta.staged_name or 'My Customer Churn Project' }}" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 10px;">
+          <label style="font-size: 12px; font-weight: 600; color: #4b5563;">Business / Industry Label</label>
+          <input type="text" name="business_label" class="form-control" value="{{ session_meta.staged_business or 'General Business' }}" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label style="font-size: 12px; font-weight: 600; color: #4b5563;">Churn Definition</label>
+            <input type="text" name="churn_definition" class="form-control" value="{{ session_meta.staged_churn_def or 'Cancelled service' }}" required>
+          </div>
+          <div class="form-group">
+            <label style="font-size: 12px; font-weight: 600; color: #4b5563;">Outcome Window</label>
+            <input type="text" name="outcome_window" class="form-control" value="{{ session_meta.staged_window or '30 days' }}" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Target & ID Mapping -->
+      <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px;">
+        <h3 style="font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;">2. Outcome &amp; Identifier Mapping</h3>
+        
+        <div class="form-group" style="margin-bottom: 10px;">
+          <label style="font-size: 12px; font-weight: 600; color: #4b5563;">Target Column (Binary Churn Outcome)</label>
+          <select name="target_column" id="target_column" class="form-control" onchange="onTargetColumnChange()" required>
+            {% for col in schema_info.column_profiles %}
+              {% if col.cardinality == 2 %}
+              <option value="{{ col.name }}" {% if col.is_primary_target %}selected{% endif %}>
+                {{ col.name }} (Binary Target &bull; {{ col.unique_count }} values)
+              </option>
+              {% endif %}
+            {% endfor %}
+            {% for col in schema_info.column_profiles %}
+              {% if col.cardinality != 2 %}
+              <option value="{{ col.name }}" disabled>
+                {{ col.name }} (Unsupported: {{ col.unique_count }} values - requires exactly 2)
+              </option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px;">
+          <div class="form-group">
+            <label style="font-size: 12px; font-weight: 600; color: #4b5563;">Positive Value ("Churn")</label>
+            <select name="positive_target_value" id="positive_target_value" class="form-control" required>
+              <!-- Populated dynamically by JS -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label style="font-size: 12px; font-weight: 600; color: #4b5563;">Customer Identifier (Optional)</label>
+            <select name="id_column" id="id_column" class="form-control" onchange="onIdColumnChange()">
+              <option value="none">-- None (Row Index) --</option>
+              {% for col in schema_info.column_profiles %}
+                <option value="{{ col.name }}" {% if col.is_primary_id %}selected{% endif %}>
+                  {{ col.name }} {% if col.is_id_candidate %}(Unique ID){% else %}({{ col.unique_count }} unique values){% endif %}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div style="font-size: 11px; color: #6b7280; margin-bottom: 10px;">
+          <em>Identifier note:</em> Must be unique per customer row (e.g. <code>customerID</code>), or select '-- None --'. Do not select feature columns like Contract.
+        </div>
+
+        <!-- Strict Anti-Leakage Checkbox -->
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px;">
+          <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #1e40af; cursor: pointer;">
+            <input type="checkbox" name="pre_outcome_confirmed" id="pre_outcome_confirmed" style="margin-top: 2px;" required checked>
+            <span><strong>Anti-Leakage Confirmation:</strong> I confirm that all selected feature columns reflect customer state strictly <em>before</em> the outcome window.</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature Selection & Type Overrides Table -->
+    <div style="margin-bottom: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div>
+          <h3 style="font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 2px;">3. Feature Columns &amp; Preprocessing Types</h3>
+          <span style="font-size: 12px; color: #6b7280;">Target and ID columns are automatically excluded from features</span>
+        </div>
+      </div>
+
+      <div class="data-table-container">
+        <table class="mapping-table">
+          <thead>
+            <tr>
+              <th style="width: 40px; text-align: center;">Use</th>
+              <th>Column Name</th>
+              <th>Inferred Type</th>
+              <th>Confirmed Type</th>
+              <th>Missing Values</th>
+              <th>Sample Data</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for col in schema_info.column_profiles %}
+            <tr id="row-{{ col.name }}">
+              <td style="text-align: center;">
+                <input type="checkbox" name="selected_features" value="{{ col.name }}" 
+                  class="feature-checkbox"
+                  data-colname="{{ col.name }}"
+                  id="cb-{{ col.name }}"
+                  {% if not col.is_primary_id and not col.is_primary_target and not col.is_constant and not col.is_all_empty and not col.is_excessive_cardinality %}checked{% endif %}>
+              </td>
+              <td style="font-weight: 600;">{{ col.name }}</td>
+              <td>
+                <span class="badge {% if col.inferred_type == 'numeric' %}badge-target{% else %}badge-ignored{% endif %}">
+                  {{ col.inferred_type }}
+                </span>
+              </td>
+              <td>
+                <select name="type_{{ col.name }}" class="type-select">
+                  <option value="numeric" {% if col.inferred_type == 'numeric' %}selected{% endif %}>Numeric (Scale)</option>
+                  <option value="categorical" {% if col.inferred_type == 'categorical' %}selected{% endif %}>Categorical (One-Hot)</option>
+                </select>
+              </td>
+              <td>
+                {% if col.missing_count > 0 %}
+                  <span style="color: #b91c1c; font-weight: 600;">{{ col.missing_count }} ({{ col.missing_pct }}%)</span>
+                {% else %}
+                  <span style="color: #15803d;">0 (0%)</span>
+                {% endif %}
+              </td>
+              <td style="color: #6b7280; font-size: 12px; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ col.sample_values|join(', ') }}
+              </td>
+              <td>
+                {% if col.is_primary_target %}
+                  <span class="badge badge-target" id="status-{{ col.name }}">Target Outcome</span>
+                {% elif col.is_primary_id %}
+                  <span class="badge badge-warning" id="status-{{ col.name }}">Customer ID</span>
+                {% elif col.is_constant %}
+                  <span class="badge badge-danger">Constant Column</span>
+                {% elif col.is_excessive_cardinality %}
+                  <span class="badge badge-danger">High Cardinality</span>
+                {% else %}
+                  <span class="badge badge-ok" id="status-{{ col.name }}">Feature Ready</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Card Footer -->
+    <div class="card-footer" style="display: flex; justify-content: space-between; align-items: center;">
+      <a href="{{ url_for('wizard_step1') }}" class="btn btn-outline">&larr; Back to Step 1</a>
+      <button type="submit" class="btn btn-primary" id="btn-train">Train and see results &rarr;</button>
+    </div>
+  </form>
+</div>
+
+<!-- Embedded Column Value Profiles for Dynamic Target Dropdown -->
+<script>
+  const columnProfiles = {{ schema_info.column_profiles|tojson }};
+  
+  function syncExcludedColumns() {
+    const targetSelect = document.getElementById('target_column');
+    const idSelect = document.getElementById('id_column');
+    const selectedTarget = targetSelect ? targetSelect.value : null;
+    const selectedId = idSelect ? idSelect.value : null;
+
+    document.querySelectorAll('.feature-checkbox').forEach(cb => {
+      const colName = cb.dataset.colname;
+      const row = document.getElementById('row-' + colName);
+      const statusBadge = document.getElementById('status-' + colName);
+
+      if (colName === selectedTarget) {
+        cb.checked = false;
+        cb.disabled = true;
+        if (row) row.style.opacity = '0.5';
+        if (statusBadge) {
+          statusBadge.className = 'badge badge-target';
+          statusBadge.textContent = 'Selected Target';
+        }
+      } else if (colName === selectedId && selectedId !== 'none') {
+        cb.checked = false;
+        cb.disabled = true;
+        if (row) row.style.opacity = '0.5';
+        if (statusBadge) {
+          statusBadge.className = 'badge badge-warning';
+          statusBadge.textContent = 'Selected ID';
+        }
+      } else {
+        cb.disabled = false;
+        if (row) row.style.opacity = '1.0';
+        if (statusBadge && (statusBadge.textContent === 'Selected Target' || statusBadge.textContent === 'Selected ID')) {
+          statusBadge.className = 'badge badge-ok';
+          statusBadge.textContent = 'Feature Ready';
+        }
+      }
+    });
+  }
+
+  function onTargetColumnChange() {
+    const targetSelect = document.getElementById('target_column');
+    const posSelect = document.getElementById('positive_target_value');
+    if (!targetSelect || !posSelect) return;
+
+    const selectedTarget = targetSelect.value;
+    const profile = columnProfiles.find(p => p.name === selectedTarget);
+    posSelect.innerHTML = '';
+    
+    if (profile && profile.unique_samples) {
+      profile.unique_samples.forEach(val => {
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = val;
+        const lower = String(val).toLowerCase();
+        if (lower === 'yes' || lower === '1' || lower === 'churn' || lower === 'churned' || lower === 'true') {
+          opt.selected = true;
+        }
+        posSelect.appendChild(opt);
+      });
+    }
+
+    syncExcludedColumns();
+  }
+
+  function onIdColumnChange() {
+    syncExcludedColumns();
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    onTargetColumnChange();
+    syncExcludedColumns();
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,87 @@
+{
+  "available": true,
+  "k": 4,
+  "numeric_features": [
+    "Contract_Age_Months",
+    "User_Licenses",
+    "Monthly_Spend",
+    "Weekly_Active_Users",
+    "Support_Tickets_90d",
+    "Feature_Adoption_Score"
+  ],
+  "clusters": [
+    {
+      "cluster_id": 1,
+      "persona_title": "High Risk: Low User_Licenses / Low Monthly_Spend",
+      "size": 388,
+      "percentage": 32.3,
+      "churn_rate": 52.1,
+      "medians": {
+        "Contract_Age_Months": 8.0,
+        "User_Licenses": 7.0,
+        "Monthly_Spend": 180.98,
+        "Weekly_Active_Users": 4.5,
+        "Support_Tickets_90d": 2.0,
+        "Feature_Adoption_Score": 53.0
+      },
+      "suggested_action": "Proactive retention outreach, pricing review, onboarding assistance."
+    },
+    {
+      "cluster_id": 3,
+      "persona_title": "High Risk: Low Contract_Age_Months / Low User_Licenses",
+      "size": 427,
+      "percentage": 35.6,
+      "churn_rate": 40.7,
+      "medians": {
+        "Contract_Age_Months": 7.0,
+        "User_Licenses": 12.0,
+        "Monthly_Spend": 412.31,
+        "Weekly_Active_Users": 6.0,
+        "Support_Tickets_90d": 4.0,
+        "Feature_Adoption_Score": 76.5
+      },
+      "suggested_action": "Proactive retention outreach, pricing review, onboarding assistance."
+    },
+    {
+      "cluster_id": 2,
+      "persona_title": "Standard: High User_Licenses / High Monthly_Spend",
+      "size": 205,
+      "percentage": 17.1,
+      "churn_rate": 38.5,
+      "medians": {
+        "Contract_Age_Months": 11.0,
+        "User_Licenses": 121.0,
+        "Monthly_Spend": 2630.73,
+        "Weekly_Active_Users": 84.0,
+        "Support_Tickets_90d": 3.0,
+        "Feature_Adoption_Score": 65.9
+      },
+      "suggested_action": "Routine health monitoring, engagement check-in, feature education."
+    },
+    {
+      "cluster_id": 4,
+      "persona_title": "Standard: High Contract_Age_Months / Low User_Licenses",
+      "size": 180,
+      "percentage": 15.0,
+      "churn_rate": 24.4,
+      "medians": {
+        "Contract_Age_Months": 34.0,
+        "User_Licenses": 7.0,
+        "Monthly_Spend": 173.45,
+        "Weekly_Active_Users": 5.0,
+        "Support_Tickets_90d": 4.0,
+        "Feature_Adoption_Score": 65.3
+      },
+      "suggested_action": "Routine health monitoring, engagement check-in, feature education."
+    }
+  ],
+  "global_medians": {
+    "Contract_Age_Months": 10.0,
+    "User_Licenses": 18.0,
+    "Monthly_Spend": 491.82500000000005,
+    "Weekly_Active_Users": 10.0,
+    "Support_Tickets_90d": 3.0,
+    "Feature_Adoption_Score": 65.5
+  },
+  "total_customers": 1200
+}

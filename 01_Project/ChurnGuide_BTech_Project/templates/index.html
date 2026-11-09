@@ -1,0 +1,535 @@
+{% extends "base.html" %}
+
+{% block title %}AI Customer Analytics & Churn Prediction | ChurnGuide{% endblock %}
+
+{% block content %}
+<!-- Professional Clean Hero Section -->
+<section class="hero-section">
+  <div class="hero-content">
+    <div class="hero-pill">
+      <span class="pill-sparkle">●</span>
+      <span>AI Customer Analytics &amp; Churn Intelligence</span>
+    </div>
+
+    <h1 class="hero-title">
+      Predict Customer Churn <br>
+      <span class="gradient-text">Before It Happens</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      Forecast subscriber attrition, diagnose individual behavioral risk factors with explainable machine learning, and protect recurring revenue through data-driven retention.
+    </p>
+
+    <!-- Hero CTA Buttons -->
+    <div class="hero-cta-group">
+      <a href="{{ url_for('wizard_step1') }}" class="btn btn-primary btn-hero">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        <span>Launch ML Studio Wizard</span>
+      </a>
+
+      <a href="#simulator-section" class="btn btn-secondary btn-hero" onclick="scrollToSimulator(event)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <span>Interactive ML Simulator</span>
+      </a>
+
+      <a href="{{ url_for('bulk') }}" class="btn btn-outline btn-hero">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span>Bulk Portfolio Scoring</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Key Metrics Row -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-header">
+        <span class="stat-icon-wrapper" style="background: #e6f6f1; color: #0fa37f;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </span>
+        <span class="stat-badge">Top Accuracy</span>
+      </div>
+      <div class="stat-value">0.8493</div>
+      <div class="stat-label">Benchmark ROC-AUC</div>
+      <div class="stat-desc">Gradient Boosting winner on 7,043 customer accounts</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <span class="stat-icon-wrapper" style="background: #eff6ff; color: #2563eb;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </span>
+        <span class="stat-badge" style="background: #eff6ff; color: #1d4ed8;">Strict Pipeline</span>
+      </div>
+      <div class="stat-value">Zero Leakage</div>
+      <div class="stat-label">Stratified Train / Test</div>
+      <div class="stat-desc">Encapsulated imputation and scaling fitted strictly on training folds</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <span class="stat-icon-wrapper" style="background: #fef3c7; color: #d97706;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+        </span>
+        <span class="stat-badge" style="background: #fef3c7; color: #92400e;">Clustering</span>
+      </div>
+      <div class="stat-value">4 Personas</div>
+      <div class="stat-label">Customer Segments</div>
+      <div class="stat-desc">Unsupervised K-Means clustering for group retention campaigns</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <span class="stat-icon-wrapper" style="background: #ede9fe; color: #7c3aed;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </span>
+        <span class="stat-badge" style="background: #ede9fe; color: #6d28d9;">Inference</span>
+      </div>
+      <div class="stat-value">&lt; 10 ms</div>
+      <div class="stat-label">Local ML Latency</div>
+      <div class="stat-desc">Instant offline model evaluation on standard workstation CPU</div>
+    </div>
+  </div>
+</section>
+
+<!-- Interactive Live ML Prediction Studio Section -->
+<section id="simulator-section" class="simulator-wrapper">
+  <div class="section-header">
+    <div class="section-tag">Machine Learning Inference</div>
+    <h2 class="section-title">Live Customer Churn Risk Simulator</h2>
+    <p class="section-subtitle">Adjust subscriber attributes below. The active trained machine learning model evaluates risk in real time.</p>
+  </div>
+
+  <div class="sim-card-grid">
+    <!-- Left Column: Interactive Feature Controls -->
+    <div class="sim-controls-panel">
+      <div class="sim-panel-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="4" y1="21" x2="4" y2="14"></line>
+          <line x1="4" y1="10" x2="4" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12" y2="3"></line>
+          <line x1="20" y1="21" x2="20" y2="16"></line>
+          <line x1="20" y1="12" x2="20" y2="3"></line>
+          <line x1="1" y1="14" x2="7" y2="14"></line>
+          <line x1="9" y1="8" x2="15" y2="8"></line>
+          <line x1="17" y1="16" x2="23" y2="16"></line>
+        </svg>
+        <span>Customer Account Parameters</span>
+        <span style="margin-left: auto; font-size: 11.5px; font-weight: 600; color: #0fa37f; background: #e6f6f1; padding: 2px 8px; border-radius: 9999px;">
+          Model: {{ active_metadata.winner_model or 'Gradient Boosting' }}
+        </span>
+      </div>
+
+      <!-- Control: Contract Type -->
+      <div class="sim-group">
+        <label class="sim-label">
+          <span>Subscription / Contract Terms</span>
+          <span class="sim-hint">Contract commitment level</span>
+        </label>
+        <div class="sim-btn-toggle" id="toggle-contract">
+          <button type="button" class="toggle-btn active" data-val="Month-to-month" onclick="updateContract('Month-to-month', this)">Month-to-Month</button>
+          <button type="button" class="toggle-btn" data-val="One year" onclick="updateContract('One year', this)">One Year</button>
+          <button type="button" class="toggle-btn" data-val="Two year" onclick="updateContract('Two year', this)">Two Year</button>
+        </div>
+      </div>
+
+      <!-- Control: Tenure Slider -->
+      <div class="sim-group">
+        <div class="sim-label-row">
+          <label class="sim-label">Customer Tenure (Account Age)</label>
+          <span class="sim-val-display" id="display-tenure">4 Months</span>
+        </div>
+        <input type="range" id="input-tenure" min="1" max="72" value="4" class="sim-slider" oninput="updateTenure(this.value)">
+        <div class="slider-marks">
+          <span>1 Month (New)</span>
+          <span>24 Months</span>
+          <span>72 Months (Loyal)</span>
+        </div>
+      </div>
+
+      <!-- Control: Monthly Charges Slider -->
+      <div class="sim-group">
+        <div class="sim-label-row">
+          <label class="sim-label">Monthly Bill / Spend</label>
+          <span class="sim-val-display" id="display-charges">$85.00 / month</span>
+        </div>
+        <input type="range" id="input-charges" min="18" max="120" value="85" step="1" class="sim-slider" oninput="updateCharges(this.value)">
+        <div class="slider-marks">
+          <span>$18.00 (Economy)</span>
+          <span>$70.00 (Standard)</span>
+          <span>$120.00 (Premium)</span>
+        </div>
+      </div>
+
+      <!-- Control: Internet & Tech Support Grid -->
+      <div class="sim-grid-2col">
+        <div class="sim-group">
+          <label class="sim-label">Internet Service</label>
+          <select id="select-internet" class="sim-select" onchange="runLiveMLSimulation()">
+            <option value="Fiber optic" selected>Fiber Optic</option>
+            <option value="DSL">DSL</option>
+            <option value="No">No Internet Service</option>
+          </select>
+        </div>
+
+        <div class="sim-group">
+          <label class="sim-label">Tech Support</label>
+          <select id="select-support" class="sim-select" onchange="runLiveMLSimulation()">
+            <option value="No" selected>No Dedicated Support</option>
+            <option value="Yes">Yes (Subscribed)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Control: Payment Method -->
+      <div class="sim-group">
+        <label class="sim-label">Payment Gateway</label>
+        <select id="select-payment" class="sim-select" onchange="runLiveMLSimulation()">
+          <option value="Electronic check" selected>Electronic Check</option>
+          <option value="Credit card (automatic)">Automatic Credit Card</option>
+          <option value="Bank transfer (automatic)">Automatic Bank Transfer</option>
+          <option value="Mailed check">Mailed Check</option>
+        </select>
+      </div>
+
+      <div class="sim-reset-bar">
+        <button type="button" class="btn-text-link" onclick="loadHighRiskProfile()">Load Sample High-Risk Profile</button>
+        <span class="dot-sep">&bull;</span>
+        <button type="button" class="btn-text-link" onclick="loadLoyalProfile()">Load Sample Loyal Profile</button>
+      </div>
+    </div>
+
+    <!-- Right Column: Real-Time Dynamic Risk Gauge & Attribution -->
+    <div class="sim-results-panel">
+      <div class="gauge-card">
+        <div class="gauge-header">
+          <span class="gauge-title">Model Churn Probability</span>
+          <span id="risk-pill" class="badge badge-danger">HIGH RISK</span>
+        </div>
+
+        <!-- Animated Circular Gauge Graphic -->
+        <div class="circular-meter-wrapper">
+          <svg class="circular-meter" viewBox="0 0 160 160">
+            <circle class="meter-bg" cx="80" cy="80" r="70"></circle>
+            <circle id="meter-fill" class="meter-fill" cx="80" cy="80" r="70" stroke-dasharray="440" stroke-dashoffset="100"></circle>
+          </svg>
+          <div class="meter-center">
+            <div id="meter-pct" class="meter-number">--%</div>
+            <div class="meter-sub">ML Probability</div>
+          </div>
+        </div>
+
+        <div class="gauge-interpretation" id="risk-summary-text">
+          Evaluating customer risk via trained machine learning model...
+        </div>
+      </div>
+
+      <!-- Top Identified Risk Drivers -->
+      <div class="drivers-card">
+        <div class="drivers-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Key Feature Contributions (Marginal Sensitivity)</span>
+        </div>
+        <div id="drivers-container">
+          <!-- Populated dynamically via genuine ML API -->
+        </div>
+      </div>
+
+      <!-- Prescriptive Retention Playbook -->
+      <div class="retention-card">
+        <div class="retention-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0fa37f" stroke-width="2.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <span style="font-weight: 700; color: #065f46; font-size: 13.5px;">Recommended Retention Actions</span>
+        </div>
+        <ul class="retention-list" id="retention-list">
+          <li>Analyzing customer profile...</li>
+        </ul>
+      </div>
+
+      <div style="margin-top: 14px; text-align: center;">
+        <a href="{{ url_for('predict') }}" class="btn btn-secondary" style="width: 100%; border-radius: 12px; font-size: 13.5px;">
+          Open In-Depth Customer Predictor &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pre-Trained Benchmark Projects Section -->
+<section class="section-container" style="background: white; border-radius: var(--radius-lg); padding: 36px 40px; border: 1px solid rgba(229, 231, 235, 0.8); box-shadow: var(--shadow-sm);">
+  <div class="section-header" style="text-align: left; margin-bottom: 24px;">
+    <div class="section-tag">Pre-Trained Benchmark Datasets</div>
+    <h2 class="section-title">Explore Industry Environments</h2>
+    <p class="section-subtitle">Switch active models with one click to test predictions, bulk scoring, and behavioral segmentation.</p>
+  </div>
+
+  <div class="options-grid" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+    <!-- Telecom Demo Card -->
+    <div class="demo-showcase-card {% if active_id == 'telecom_public_demo' %}active-border{% endif %}">
+      <div class="demo-card-top">
+        <div>
+          <span class="badge badge-success" style="font-size: 11px;">Telecommunications</span>
+          <h3 style="font-size: 17px; font-weight: 700; color: #111827; margin-top: 8px;">Telecom Customer Churn</h3>
+          <p style="font-size: 12.5px; color: #6b7280; margin-top: 4px;">7,043 Customer Records &bull; Tabular Snapshot</p>
+        </div>
+        <div class="metric-pill">
+          <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #065f46;">Winner Model</span>
+          <strong style="font-size: 14px; color: #0fa37f;">Gradient Boosting</strong>
+          <span style="font-size: 11px; color: #374151;">0.8493 ROC-AUC</span>
+        </div>
+      </div>
+
+      <div style="font-size: 13px; color: #4b5563; margin-top: 14px; line-height: 1.5;">
+        Analyzes contracts, monthly spending, fiber optic internet options, payment methods, and account tenure.
+      </div>
+
+      <div class="demo-card-actions">
+        <a href="{{ url_for('switch_project', project_id='telecom_public_demo', redirect='wizard_step3') }}" class="btn btn-primary" style="font-size: 13px; padding: 8px 18px;">
+          {% if active_id == 'telecom_public_demo' %}Active Project &bull; View Results &rarr;{% else %}Activate &amp; View Results &rarr;{% endif %}
+        </a>
+        <a href="{{ url_for('switch_project', project_id='telecom_public_demo', redirect='predict') }}" class="btn btn-outline" style="font-size: 13px; padding: 8px 16px;">
+          Single Predictor
+        </a>
+      </div>
+    </div>
+
+    <!-- B2B SaaS Demo Card -->
+    <div class="demo-showcase-card {% if active_id == 'saas_b2b_demo' %}active-border{% endif %}">
+      <div class="demo-card-top">
+        <div>
+          <span class="badge badge-warning" style="font-size: 11px;">B2B Cloud Software</span>
+          <h3 style="font-size: 17px; font-weight: 700; color: #111827; margin-top: 8px;">B2B SaaS Subscriptions</h3>
+          <p style="font-size: 12.5px; color: #6b7280; margin-top: 4px;">1,200 Enterprise Accounts &bull; Subscription Metrics</p>
+        </div>
+        <div class="metric-pill" style="background: #fef3c7; border-color: #fde68a;">
+          <span style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #92400e;">Winner Model</span>
+          <strong style="font-size: 14px; color: #b45309;">Logistic Regression</strong>
+          <span style="font-size: 11px; color: #374151;">0.7084 ROC-AUC</span>
+        </div>
+      </div>
+
+      <div style="font-size: 13px; color: #4b5563; margin-top: 14px; line-height: 1.5;">
+        Analyzes licensed seats, active platform usage frequency, Net Promoter Score, and support tickets.
+      </div>
+
+      <div class="demo-card-actions">
+        <a href="{{ url_for('switch_project', project_id='saas_b2b_demo', redirect='wizard_step3') }}" class="btn btn-primary" style="font-size: 13px; padding: 8px 18px;">
+          {% if active_id == 'saas_b2b_demo' %}Active Project &bull; View Results &rarr;{% else %}Activate &amp; View Results &rarr;{% endif %}
+        </a>
+        <a href="{{ url_for('switch_project', project_id='saas_b2b_demo', redirect='predict') }}" class="btn btn-outline" style="font-size: 13px; padding: 8px 16px;">
+          Single Predictor
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Action Footer Strip -->
+<div class="features-strip" style="margin-top: 36px;">
+  <a href="{{ url_for('wizard_step1') }}" class="feature-box">
+    <div class="feature-title">1. ML Studio Stepper</div>
+    <div class="feature-desc">Upload arbitrary CSV, map schema &amp; train custom model</div>
+  </a>
+
+  <a href="{{ url_for('predict') }}" class="feature-box">
+    <div class="feature-title">2. Single Customer Predictor</div>
+    <div class="feature-desc">Score individual customer profile with marginal sensitivity attribution</div>
+  </a>
+
+  <a href="{{ url_for('bulk') }}" class="feature-box">
+    <div class="feature-title">3. Portfolio Bulk Scoring</div>
+    <div class="feature-desc">Upload unlabelled customer CSV and download scored predictions</div>
+  </a>
+
+  <a href="{{ url_for('segments') }}" class="feature-box">
+    <div class="feature-title">4. Behavioral Segmentation</div>
+    <div class="feature-desc">Unsupervised K-Means clustering (k=4) customer cohorts</div>
+  </a>
+</div>
+
+<!-- Interactive Simulator Client-Side Script with Real ML API Hook -->
+<script>
+  let currentContract = "Month-to-month";
+  let currentTenure = 4;
+  let currentCharges = 85.0;
+  let simDebounceTimer = null;
+
+  function scrollToSimulator(e) {
+    e.preventDefault();
+    const elem = document.getElementById('simulator-section');
+    if (elem) {
+      elem.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  function updateContract(val, btn) {
+    currentContract = val;
+    document.querySelectorAll('#toggle-contract .toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    triggerLiveML();
+  }
+
+  function updateTenure(val) {
+    currentTenure = parseFloat(val);
+    document.getElementById('display-tenure').innerText = `${currentTenure} Month${currentTenure > 1 ? 's' : ''}`;
+    triggerLiveML();
+  }
+
+  function updateCharges(val) {
+    currentCharges = parseFloat(val);
+    document.getElementById('display-charges').innerText = `$${currentCharges.toFixed(2)} / month`;
+    triggerLiveML();
+  }
+
+  function loadHighRiskProfile() {
+    updateContract("Month-to-month", document.querySelector('#toggle-contract .toggle-btn[data-val="Month-to-month"]'));
+    document.getElementById('input-tenure').value = 3;
+    updateTenure(3);
+    document.getElementById('input-charges').value = 92;
+    updateCharges(92);
+    document.getElementById('select-internet').value = "Fiber optic";
+    document.getElementById('select-support').value = "No";
+    document.getElementById('select-payment').value = "Electronic check";
+    triggerLiveML();
+  }
+
+  function loadLoyalProfile() {
+    updateContract("Two year", document.querySelector('#toggle-contract .toggle-btn[data-val="Two year"]'));
+    document.getElementById('input-tenure').value = 48;
+    updateTenure(48);
+    document.getElementById('input-charges').value = 45;
+    updateCharges(45);
+    document.getElementById('select-internet').value = "DSL";
+    document.getElementById('select-support').value = "Yes";
+    document.getElementById('select-payment').value = "Bank transfer (automatic)";
+    triggerLiveML();
+  }
+
+  function triggerLiveML() {
+    clearTimeout(simDebounceTimer);
+    simDebounceTimer = setTimeout(runLiveMLSimulation, 120);
+  }
+
+  // Calls Python scikit-learn pipeline directly via JSON API
+  function runLiveMLSimulation() {
+    const internet = document.getElementById('select-internet').value;
+    const support = document.getElementById('select-support').value;
+    const payment = document.getElementById('select-payment').value;
+
+    const payload = {
+      Contract: currentContract,
+      tenure: currentTenure,
+      MonthlyCharges: currentCharges,
+      TotalCharges: Math.round(currentTenure * currentCharges * 100) / 100,
+      InternetService: internet,
+      TechSupport: support,
+      PaymentMethod: payment
+    };
+
+    fetch('/api/simulate_churn', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success) return;
+
+      const prob = data.probability;
+      const pct = Math.round(prob * 100);
+      const level = data.risk_level;
+
+      // Update Gauge
+      const meterFill = document.getElementById('meter-fill');
+      const meterPct = document.getElementById('meter-pct');
+      const riskPill = document.getElementById('risk-pill');
+      const summaryText = document.getElementById('risk-summary-text');
+      const driversContainer = document.getElementById('drivers-container');
+      const retentionList = document.getElementById('retention-list');
+
+      const circumference = 440;
+      const offset = circumference - (circumference * (pct / 100));
+      meterFill.style.strokeDashoffset = offset;
+      meterPct.innerText = `${pct}%`;
+
+      if (level === "High") {
+        meterFill.style.stroke = '#ef4444';
+        riskPill.className = 'badge badge-danger';
+        riskPill.innerText = 'HIGH CHURN RISK';
+        summaryText.innerHTML = `Model predicts an elevated <strong>${pct}% attrition probability</strong>. Prompt retention intervention recommended.`;
+      } else if (level === "Medium") {
+        meterFill.style.stroke = '#f59e0b';
+        riskPill.className = 'badge badge-warning';
+        riskPill.innerText = 'MODERATE CHURN RISK';
+        summaryText.innerHTML = `Model predicts a moderate <strong>${pct}% churn risk</strong>. Key sensitivity factors should be reviewed.`;
+      } else {
+        meterFill.style.stroke = '#10b981';
+        riskPill.className = 'badge badge-success';
+        riskPill.innerText = 'LOW RISK / LOYAL';
+        summaryText.innerHTML = `Model predicts a low <strong>${pct}% churn risk</strong>. Customer demonstrates stable retention attributes.`;
+      }
+
+      // Update Top Sensitivity Drivers from Genuine ML Output
+      if (data.top_drivers && data.top_drivers.length > 0) {
+        driversContainer.innerHTML = data.top_drivers.map(d => `
+          <div class="driver-item">
+            <div class="driver-dot ${d.direction === 'increases_risk' ? 'danger' : 'success'}"></div>
+            <div class="driver-text">
+              <strong>${d.feature}: ${d.customer_value}</strong>
+              <span>${d.interpretation}</span>
+            </div>
+            <span class="badge ${d.direction === 'increases_risk' ? 'badge-danger' : 'badge-success'}" style="font-size: 11px;">
+              ${d.direction_label}
+            </span>
+          </div>
+        `).join('');
+      } else {
+        driversContainer.innerHTML = `<div style="font-size: 12px; color: #6b7280; padding: 6px 0;">Attributes align closely with cohort baseline.</div>`;
+      }
+
+      // Update Recommended Actions
+      if (data.suggested_actions && data.suggested_actions.length > 0) {
+        retentionList.innerHTML = data.suggested_actions.map(a => `<li>${a}</li>`).join('');
+      } else {
+        retentionList.innerHTML = `<li>Maintain standard customer success contact cadence.</li>`;
+      }
+    })
+    .catch(err => {
+      console.error("ML Simulation error:", err);
+    });
+  }
+
+  // Run on initial load
+  document.addEventListener('DOMContentLoaded', () => {
+    runLiveMLSimulation();
+  });
+</script>
+{% endblock %}

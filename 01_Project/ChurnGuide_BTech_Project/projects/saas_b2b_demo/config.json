@@ -1,0 +1,41 @@
+{
+  "id": "saas_b2b_demo",
+  "name": "B2B Cloud SaaS Platform",
+  "business_label": "B2B Cloud Software",
+  "churn_definition": "Account canceled recurring software subscription or lapsed after contract term",
+  "outcome_window": "Quarterly renewal observation cycle",
+  "id_column": "Account_ID",
+  "target_column": "Status",
+  "positive_target_value": "Churned",
+  "feature_columns": [
+    "Contract_Age_Months",
+    "User_Licenses",
+    "Monthly_Spend",
+    "Weekly_Active_Users",
+    "Support_Tickets_90d",
+    "Feature_Adoption_Score",
+    "Plan_Tier",
+    "Company_Size",
+    "Billing_Cycle",
+    "Payment_Method",
+    "Auto_Renew"
+  ],
+  "numeric_features": [
+    "Contract_Age_Months",
+    "User_Licenses",
+    "Monthly_Spend",
+    "Weekly_Active_Users",
+    "Support_Tickets_90d",
+    "Feature_Adoption_Score"
+  ],
+  "categorical_features": [
+    "Plan_Tier",
+    "Company_Size",
+    "Billing_Cycle",
+    "Payment_Method",
+    "Auto_Renew"
+  ],
+  "pre_outcome_confirmed": true,
+  "provenance_note": "SYNTHETIC B2B SaaS Subscription Fixture (generated strictly to test cross-domain schema flexibility and software plumbing; not real enterprise validation).",
+  "is_demo": true
+}

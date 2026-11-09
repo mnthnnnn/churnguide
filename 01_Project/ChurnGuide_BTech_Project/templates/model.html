@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-center">
+  <h1 class="header-title">Model Evaluation &amp; Transparency</h1>
+  <p class="header-subtitle">Experimental rigor &bull; Stratified 80/20 train/test split &bull; 5-fold training CV &bull; Single held-out test evaluation</p>
+</div>
+
+<!-- Experimental Protocol & Anti-Leakage Card -->
+<div class="card" style="margin-bottom: 28px;">
+  <h2 class="card-title">Scientific Machine Learning Protocol</h2>
+  <p class="card-subtitle">Zero data leakage guarantee and frozen test evaluation for project: <strong>{{ active_config.name }}</strong></p>
+  <div style="font-size: 13.5px; color: #4b5563; line-height: 1.6;">
+    <p style="margin-bottom: 10px;">
+      To prevent data snooping, optimistic bias, and evaluation leakage, our machine learning pipeline follows strict scientific standards:
+    </p>
+    <ul style="margin-left: 20px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px;">
+      <li><strong>Data Partitioning:</strong> Stratified 80/20 train/test split (seed 42). The test partition was completely set aside and never accessed during preprocessing or hyperparameter selection.</li>
+      <li><strong>Leakage Prevention:</strong> Preprocessing (numeric median imputation &amp; standard scaling, categorical mode imputation &amp; one-hot encoding) was encapsulated inside a scikit-learn <code>Pipeline</code>. Transformers were fitted only on training folds.</li>
+      <li><strong>Model Comparison:</strong> Stratified 5-Fold Cross Validation was performed exclusively on the 80% training set to evaluate Logistic Regression, Random Forest, and Gradient Boosting.</li>
+      <li><strong>Single Test Evaluation:</strong> The winning model (<strong>{{ metadata.winner_model }}</strong>) was frozen, refitted on the full training set, and evaluated exactly once on the held-out test partition.</li>
+    </ul>
+    <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #92400e;">
+      <strong>Operational Limitation:</strong> Cross-sectional snapshot evaluation reflects historical association. In production deployment, temporal forward testing (training on time $T_0$ to predict outcome at $T_1$) is required to guarantee operational forecast validity.
+    </div>
+  </div>
+</div>
+
+<!-- 5-Fold CV Comparison Table -->
+<div class="card" style="margin-bottom: 28px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 12px;">
+    <div>
+      <h2 class="card-title" style="margin-bottom: 2px;">Training Partition 5-Fold Cross Validation</h2>
+      <p class="card-subtitle" style="margin-bottom: 0;">Selection Metric: Stratified Mean ROC-AUC on 80% training partition.</p>
+    </div>
+    <span class="badge badge-success" style="font-size: 13px; padding: 6px 14px;">
+      Winner: {{ metadata.winner_model }}
+    </span>
+  </div>
+
+  <div class="data-table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Algorithm Candidate</th>
+          <th>Optimal Hyperparameters</th>
+          <th>Mean CV ROC-AUC</th>
+          <th>Std. Deviation</th>
+          <th>Selection Outcome</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for algo_name, res in metadata.cv_results.items() %}
+        <tr style="{% if res.is_winner %}background: #f0fdf4; font-weight: 600;{% endif %}">
+          <td style="font-weight: 700; color: {% if res.is_winner %}#166534{% else %}#111827{% endif %};">
+            {{ algo_name }}
+          </td>
+          <td style="font-family: monospace; font-size: 12px;">
+            {% if res.best_params is mapping %}
+              {% for k, v in res.best_params.items() %}
+                {{ k }}={{ v }}{% if not loop.last %}, {% endif %}
+              {% endfor %}
+            {% else %}
+              {{ res.best_params }}
+            {% endif %}
+          </td>
+          <td style="font-weight: 700; color: {% if res.is_winner %}#166534{% else %}#111827{% endif %};">
+            {{ res.best_cv_roc_auc }}
+          </td>
+          <td style="color: #6b7280;">&plusmn; {{ res.cv_std_roc_auc }}</td>
+          <td>
+            {% if res.is_winner %}
+              <span class="badge badge-success">&#10003; WINNER (Selected)</span>
+            {% else %}
+              <span class="badge badge-ignored">Candidate</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Held-out Test Set Performance -->
+<div class="card" style="margin-bottom: 28px;">
+  <h2 class="card-title">Held-Out Test Set Performance (20% Unseen Customers)</h2>
+  <p class="card-subtitle">Single final evaluation of the frozen pipeline on held-out records.</p>
+
+  <div class="kpi-grid" style="margin-bottom: 24px;">
+    <div class="kpi-tile">
+      <div class="kpi-label">Test Accuracy</div>
+      <div class="kpi-value">{{ "{:.2f}%".format(metadata.test_metrics.accuracy * 100) }}</div>
+      <div style="font-size: 11.5px; color: #6b7280; margin-top: 4px;">Overall correct rate</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">Test Precision</div>
+      <div class="kpi-value">{{ "{:.2f}%".format(metadata.test_metrics.precision * 100) }}</div>
+      <div style="font-size: 11.5px; color: #6b7280; margin-top: 4px;">Predicted churners that churned</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">Test Recall</div>
+      <div class="kpi-value" style="color: #b91c1c;">{{ "{:.2f}%".format(metadata.test_metrics.recall * 100) }}</div>
+      <div style="font-size: 11.5px; color: #6b7280; margin-top: 4px;">Actual churners captured</div>
+    </div>
+    <div class="kpi-tile">
+      <div class="kpi-label">Test ROC-AUC</div>
+      <div class="kpi-value" style="color: #0fa37f;">{{ "{:.4f}".format(metadata.test_metrics.roc_auc) }}</div>
+      <div style="font-size: 11.5px; color: #6b7280; margin-top: 4px;">Test F1: {{ "{:.4f}".format(metadata.test_metrics.f1) }}</div>
+    </div>
+  </div>
+
+  <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #4b5563;">
+    <strong>Metric Analysis:</strong> In customer churn prediction, recall is frequently lower than accuracy due to class imbalance. If false negatives carry higher business risk than false positives, the classification threshold can be lowered from 0.50 to 0.35 during bulk scoring.
+  </div>
+</div>
+
+<!-- Visual Evaluation Plots -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px;">
+  <!-- Confusion Matrix Plot -->
+  <div class="card" style="text-align: center;">
+    <h3 class="card-title" style="margin-bottom: 4px;">Test Confusion Matrix</h3>
+    <p class="card-subtitle" style="margin-bottom: 12px;">Unseen test partition true vs predicted classes.</p>
+    <img src="{{ url_for('project_plot', filename='confusion_matrix.png') }}" alt="Confusion Matrix" style="max-width: 100%; border-radius: 8px; border: 1px solid #e5e7eb;">
+  </div>
+
+  <!-- ROC Curve Plot -->
+  <div class="card" style="text-align: center;">
+    <h3 class="card-title" style="margin-bottom: 4px;">Held-Out ROC Curve</h3>
+    <p class="card-subtitle" style="margin-bottom: 12px;">Sensitivity vs specificity tradeoff (AUC = {{ "{:.3f}".format(metadata.test_metrics.roc_auc) }}).</p>
+    <img src="{{ url_for('project_plot', filename='roc_curve.png') }}" alt="ROC Curve" style="max-width: 100%; border-radius: 8px; border: 1px solid #e5e7eb;">
+  </div>
+</div>
+
+<!-- Permutation Feature Importance Plot -->
+<div class="card">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+    <div>
+      <h3 class="card-title" style="margin-bottom: 2px;">Permutation Feature Importance (Diagnostic)</h3>
+      <p class="card-subtitle" style="margin-bottom: 0;">Evaluated on held-out test data by shuffling feature values.</p>
+    </div>
+    <span class="badge badge-warning" style="font-size: 11.5px;">Model Diagnostics &bull; Non-Causal</span>
+  </div>
+  <div style="text-align: center; margin-bottom: 14px;">
+    <img src="{{ url_for('project_plot', filename='feature_importance.png') }}" alt="Feature Importance" style="max-width: 100%; max-height: 440px; border-radius: 8px; border: 1px solid #e5e7eb;">
+  </div>
+  <p style="font-size: 12.5px; color: #6b7280;">
+    <em>Scientific Caveat:</em> Permutation importance measures how much model ROC-AUC drops when a feature's values are randomly permuted. It reflects feature reliance in this snapshot, not a causal prescription for customer intervention.
+  </p>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+02_Report
+03_Presentation
+04_Walkthrough_Video
+05_Viva_and_Study_Guides
+*.zip
+*.bat
+*.command
+*.sh
+.venv
+__pycache__
+.pytest_cache

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-center">
+  <h1 class="header-title">Bulk Customer Scoring</h1>
+  <p class="header-subtitle">Score an entire customer portfolio at once. Generates risk probabilities and a download-ready CSV.</p>
+</div>
+
+<!-- Business Switcher & Template Ribbon -->
+<div class="card" style="margin-bottom: 24px; padding: 18px 24px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+    <!-- Left: Business Selector -->
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <label for="bulk-business-picker" style="font-size: 13px; font-weight: 700; color: #374151; white-space: nowrap;">
+        Active Business Model:
+      </label>
+      <select id="bulk-business-picker" class="form-control" style="width: auto; min-width: 260px; font-weight: 600;" onchange="switchBulkBusiness(this.value)">
+        {% for proj in all_projects %}
+        <option value="{{ proj.id }}" {% if proj.id == active_id %}selected{% endif %}>
+          {{ proj.name }} ({{ proj.business_label }})
+        </option>
+        {% endfor %}
+      </select>
+      <span class="badge badge-success" style="font-size: 12px; padding: 5px 12px;">
+        {{ active_metadata.winner_model or 'Deployed Pipeline' }}
+      </span>
+    </div>
+
+    <!-- Right: Download Sample Template Button -->
+    <div>
+      <a href="{{ url_for('download_sample_template') }}" class="btn btn-outline" style="font-size: 12.5px; padding: 8px 16px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span>Download Sample Scoring CSV Template</span>
+      </a>
+    </div>
+  </div>
+
+  <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
+    <strong>Required Features for {{ active_config.name }}:</strong>
+    <span style="font-family: monospace; color: #374151;">
+      {{ (active_config.numeric_features + active_config.categorical_features)|join(', ') }}
+    </span>
+  </div>
+</div>
+
+<!-- Upload & Test Sample Card -->
+<div class="card">
+  <form id="bulk-upload-form" action="{{ url_for('bulk') }}" method="POST" enctype="multipart/form-data">
+    <input type="file" name="bulk_csv" id="bulk_csv_input" accept=".csv" style="display: none;" onchange="this.form.submit()">
+
+    <div class="dropzone" onclick="document.getElementById('bulk_csv_input').click()">
+      <div class="dropzone-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+      </div>
+      <div class="dropzone-title">Upload Customer Portfolio CSV to Score</div>
+      <div class="dropzone-sub">Drop any unlabelled customer CSV matching the active business schema (no outcome column needed)</div>
+      <button type="button" class="btn-upload" onclick="document.getElementById('bulk_csv_input').click(); event.stopPropagation();">
+        Choose CSV File
+      </button>
+    </div>
+  </form>
+
+  <div class="divider-or">
+    <span>OR SCORE PRE-LOADED CUSTOMER BATCH</span>
+  </div>
+
+  <form action="{{ url_for('bulk') }}" method="POST" style="text-align: center;">
+    <input type="hidden" name="use_demo_sample" value="1">
+    <button type="submit" class="btn btn-secondary" style="font-size: 13.5px; padding: 12px 28px;">
+      Score Pre-Loaded Portfolio Batch ({{ active_config.name }}) &rarr;
+    </button>
+  </form>
+</div>
+
+{% if scored_file_ready %}
+<!-- Scored Summary & Preview Card -->
+<div class="card" style="margin-top: 28px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+    <div>
+      <h2 class="card-title" style="margin-bottom: 2px;">Bulk Scoring Results</h2>
+      <p class="card-subtitle" style="margin-bottom: 0;">{{ total_scored }} customer accounts scored successfully for {{ active_config.name }}.</p>
+    </div>
+    <a href="{{ url_for('download_scored') }}" class="btn btn-primary">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align: -2px; margin-right: 4px;">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      Download Scored CSV
+    </a>
+  </div>
+
+  <div class="data-table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          {% if active_config.id_column and active_config.id_column != 'none' %}
+          <th>{{ active_config.id_column }}</th>
+          {% else %}
+          <th>Record Index</th>
+          {% endif %}
+          <th>Predicted Probability</th>
+          <th>Risk Level</th>
+          {% for feat in (active_config.numeric_features + active_config.categorical_features)[:5] %}
+          <th>{{ feat }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in scored_preview %}
+        <tr>
+          {% if active_config.id_column and active_config.id_column != 'none' and active_config.id_column in row %}
+          <td style="font-weight: 600;">{{ row[active_config.id_column] }}</td>
+          {% else %}
+          <td style="font-weight: 600;">Row {{ loop.index }}</td>
+          {% endif %}
+          <td style="font-weight: 700;">{{ "{:.1f}%".format(row.Predicted_Churn_Probability * 100) }}</td>
+          <td>
+            {% if row.Risk_Level == 'High' %}
+              <span class="badge badge-danger">High Risk</span>
+            {% elif row.Risk_Level == 'Medium' %}
+              <span class="badge badge-warning">Medium Risk</span>
+            {% else %}
+              <span class="badge badge-success">Low Risk</span>
+            {% endif %}
+          </td>
+          {% for feat in (active_config.numeric_features + active_config.categorical_features)[:5] %}
+          <td>{{ row.get(feat, '-') }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<script>
+  function switchBulkBusiness(projId) {
+    if (projId) {
+      window.location.href = "{{ url_for('switch_project', project_id='PLACEHOLDER') }}".replace('PLACEHOLDER', projId) + '?redirect=bulk';
+    }
+  }
+</script>
+{% endblock %}

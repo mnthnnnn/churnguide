@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ChurnGuide - AI Customer Analytics & Churn Prediction{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <a href="{{ url_for('index') }}" class="brand">
+      <div class="brand-icon">
+        <div class="brand-dot"></div>
+      </div>
+      <span>ChurnGuide</span>
+    </a>
+
+    <nav class="nav-links">
+      <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Overview</a>
+      <a href="{{ url_for('wizard_step1') }}" class="{% if request.endpoint in ['wizard_step1', 'wizard_step2', 'wizard_step3'] %}active{% endif %}">ML Studio</a>
+      <a href="{{ url_for('predict') }}" class="{% if request.endpoint == 'predict' %}active{% endif %}">Predict Customer</a>
+      <a href="{{ url_for('bulk') }}" class="{% if request.endpoint in ['bulk', 'download_scored'] %}active{% endif %}">Bulk Scoring</a>
+      <a href="{{ url_for('analytics') }}" class="{% if request.endpoint == 'analytics' %}active{% endif %}">Analytics</a>
+      <a href="{{ url_for('segments') }}" class="{% if request.endpoint == 'segments' %}active{% endif %}">Segments</a>
+      <a href="{{ url_for('model_report') }}" class="{% if request.endpoint == 'model_report' %}active{% endif %}">Diagnostics</a>
+    </nav>
+
+    <!-- Project Switcher & Clean Model Tag -->
+    <div style="display: flex; align-items: center; gap: 12px;">
+      {% if active_metadata and active_metadata.winner_model %}
+      <span class="badge badge-success" style="font-size: 11.5px; padding: 4px 10px; font-weight: 600;">
+        {{ active_metadata.winner_model }}
+      </span>
+      {% endif %}
+
+      <div class="project-selector-wrapper">
+        <div class="project-select-pill" id="project-toggle-btn" onclick="toggleProjectDropdown(event)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            {{ active_config.name or active_id or 'No Project' }}
+          </span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+
+        <div class="project-dropdown" id="project-dropdown">
+          <div class="project-dropdown-header">Active Project &amp; Datasets</div>
+          <div style="max-height: 280px; overflow-y: auto;">
+            {% for proj in all_projects %}
+            <a href="{{ url_for('switch_project', project_id=proj.id) }}" class="project-item {% if proj.id == active_id %}active{% endif %}">
+              <div class="project-item-title">{{ proj.name }}</div>
+              <div class="project-item-sub">{{ proj.business_label }} &bull; {{ proj.model_type or 'Trained' }}</div>
+            </a>
+            {% endfor %}
+          </div>
+          <div class="project-dropdown-footer">
+            <a href="{{ url_for('wizard_step1') }}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>+ Add new dataset / project</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Flash Messages & Main Content Container -->
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="alert alert-{{ 'error' if category in ['danger', 'error'] else ('warning' if category == 'warning' else 'success') }}">
+            <span>{{ msg }}</span>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2026 <strong>ChurnGuide</strong> &bull; AI Customer Analytics &amp; Churn Intelligence Platform. All rights reserved.</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

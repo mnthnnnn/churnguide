@@ -1,0 +1,69 @@
+{
+  "available": true,
+  "k": 4,
+  "numeric_features": [
+    "tenure",
+    "MonthlyCharges",
+    "TotalCharges"
+  ],
+  "clusters": [
+    {
+      "cluster_id": 4,
+      "persona_title": "High Risk: Low tenure",
+      "size": 2276,
+      "percentage": 32.3,
+      "churn_rate": 48.2,
+      "medians": {
+        "tenure": 14.0,
+        "MonthlyCharges": 80.05,
+        "TotalCharges": 1107.25
+      },
+      "suggested_action": "Proactive retention outreach, pricing review, onboarding assistance."
+    },
+    {
+      "cluster_id": 3,
+      "persona_title": "Standard: Low tenure / Low MonthlyCharges",
+      "size": 1704,
+      "percentage": 24.2,
+      "churn_rate": 24.6,
+      "medians": {
+        "tenure": 7.0,
+        "MonthlyCharges": 24.85,
+        "TotalCharges": 220.4
+      },
+      "suggested_action": "Routine health monitoring, engagement check-in, feature education."
+    },
+    {
+      "cluster_id": 2,
+      "persona_title": "Standard: High tenure / High MonthlyCharges",
+      "size": 1904,
+      "percentage": 27.0,
+      "churn_rate": 15.4,
+      "medians": {
+        "tenure": 62.0,
+        "MonthlyCharges": 95.05,
+        "TotalCharges": 5449.65
+      },
+      "suggested_action": "Routine health monitoring, engagement check-in, feature education."
+    },
+    {
+      "cluster_id": 1,
+      "persona_title": "Loyal Core: High tenure / Low MonthlyCharges",
+      "size": 1159,
+      "percentage": 16.5,
+      "churn_rate": 5.0,
+      "medians": {
+        "tenure": 53.0,
+        "MonthlyCharges": 25.35,
+        "TotalCharges": 1574.5
+      },
+      "suggested_action": "Appreciation incentives, annual renewal bonuses, referral engagement."
+    }
+  ],
+  "global_medians": {
+    "tenure": 29.0,
+    "MonthlyCharges": 70.35,
+    "TotalCharges": 1397.475
+  },
+  "total_customers": 7043
+}

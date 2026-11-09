@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-center">
+  <h1 class="header-title">Find customers likely to leave</h1>
+  <p class="header-subtitle">Three simple steps. No technical knowledge needed.</p>
+</div>
+
+<!-- Stepper -->
+<div class="stepper">
+  <div class="step-item step-active">
+    <div class="step-circle">1</div>
+    <span class="step-label">Add data</span>
+  </div>
+  <div class="step-line"></div>
+  <div class="step-item step-inactive">
+    <div class="step-circle">2</div>
+    <span class="step-label">Check columns</span>
+  </div>
+  <div class="step-line"></div>
+  <div class="step-item step-inactive">
+    <div class="step-circle">3</div>
+    <span class="step-label">See results</span>
+  </div>
+</div>
+
+<!-- Explainer Banner -->
+<div class="explainer-strip">
+  <strong>What is churn?</strong> A customer "churns" when they stop using a service, lapse in usage, or cancel a contract. ChurnGuide estimates who is at risk so your team can intervene early.
+</div>
+
+<!-- Upload & Data Selection Card -->
+<div class="card">
+  <form id="step1-form" action="{{ url_for('wizard_step1') }}" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="dataset_choice" id="dataset_choice" value="upload">
+    <input type="hidden" name="sample_template" id="sample_template" value="">
+    <input type="hidden" name="demo_project_id" id="demo_project_id" value="">
+    <input type="file" name="csv_file" id="csv_file_input" accept=".csv" style="display: none;">
+
+    <!-- Dropzone Area -->
+    <div class="dropzone" id="dropzone-area" onclick="triggerUploadClick()">
+      <div class="dropzone-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="19" x2="12" y2="5"></line>
+          <polyline points="5 12 12 5 19 12"></polyline>
+        </svg>
+      </div>
+      <div class="dropzone-title" id="dropzone-title">Drop your customer CSV here</div>
+      <div class="dropzone-sub" id="dropzone-sub">One row per customer snapshot &bull; Requires known historical churn outcome</div>
+      <button type="button" class="btn-upload" onclick="triggerUploadClick(); event.stopPropagation();">Choose file</button>
+    </div>
+
+    <!-- Metadata Fields (Project & Business details) -->
+    <div id="metadata-fields" style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-top: 20px;">
+      <h3 style="font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 12px;">Create New Project &amp; Business Profile</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-group">
+          <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Project Name</label>
+          <input type="text" name="project_name" id="project_name" class="form-control" value="My Customer Churn Project" required>
+        </div>
+        <div class="form-group">
+          <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Business / Industry Context</label>
+          <input type="text" name="business_label" id="business_label" class="form-control" value="Subscription / Digital Services" required>
+        </div>
+        <div class="form-group">
+          <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Churn Definition</label>
+          <input type="text" name="churn_definition" id="churn_definition" class="form-control" value="Customer cancelled subscription or lapsed" required>
+        </div>
+        <div class="form-group">
+          <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Observation Window</label>
+          <input type="text" name="outcome_window" id="outcome_window" class="form-control" value="30 days post-observation" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider-or">
+      <span>OR START A NEW PROJECT WITH SAMPLE DATA</span>
+    </div>
+
+    <!-- Sample Data Cards Grid for New Project Setup -->
+    <div class="options-grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="option-card" id="opt-sample-telco" onclick="selectTemplateData('telecom', 'opt-sample-telco', 'Telecom Churn Analysis', 'Telecommunications')">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div class="option-title">Telecom Customer Sample</div>
+          <span class="badge badge-success" style="font-size: 11px;">7,043 Accounts</span>
+        </div>
+        <div class="option-desc" style="margin-top: 4px;">Use sample telecom dataset to create and train a new project</div>
+      </div>
+
+      <div class="option-card" id="opt-sample-saas" onclick="selectTemplateData('saas', 'opt-sample-saas', 'SaaS Retention Project', 'B2B Software')">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div class="option-title">B2B SaaS Sample</div>
+          <span class="badge badge-warning" style="font-size: 11px;">1,200 Accounts</span>
+        </div>
+        <div class="option-desc" style="margin-top: 4px;">Use sample B2B SaaS dataset to create and train a new project</div>
+      </div>
+    </div>
+
+    <!-- Card Footer -->
+    <div class="card-footer" style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center;">
+      <span class="footer-note">Your data stays strictly local on this computer.</span>
+      <button type="submit" class="btn btn-primary" id="btn-continue">Continue to Column Check &rarr;</button>
+    </div>
+  </form>
+</div>
+
+<!-- Bottom Features Strip -->
+<div class="features-strip">
+  <a href="{{ url_for('predict') }}" class="feature-box">
+    <div class="feature-title">Risk for one customer</div>
+    <div class="feature-desc">Fill features, view estimated risk</div>
+  </a>
+
+  <a href="{{ url_for('bulk') }}" class="feature-box">
+    <div class="feature-title">Bulk scoring</div>
+    <div class="feature-desc">Score unlabelled customer CSV &amp; export</div>
+  </a>
+
+  <a href="{{ url_for('analytics') }}" class="feature-box">
+    <div class="feature-title">Customer analytics</div>
+    <div class="feature-desc">Subgroup churn distributions</div>
+  </a>
+
+  <a href="{{ url_for('segments') }}" class="feature-box">
+    <div class="feature-title">Customer segments</div>
+    <div class="feature-desc">K-Means behavioral cohorts</div>
+  </a>
+</div>
+
+<script>
+  function selectTemplateData(templateType, cardId, defaultName, defaultBiz) {
+    document.getElementById('dataset_choice').value = 'template';
+    document.getElementById('sample_template').value = templateType;
+    document.getElementById('demo_project_id').value = '';
+
+    document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    const card = document.getElementById(cardId);
+    if (card) card.classList.add('selected');
+
+    if (defaultName) document.getElementById('project_name').value = defaultName;
+    if (defaultBiz) document.getElementById('business_label').value = defaultBiz;
+
+    const title = document.getElementById('dropzone-title');
+    const sub = document.getElementById('dropzone-sub');
+    if (title) title.innerText = `Selected template: ${defaultName}`;
+    if (sub) sub.innerText = "Click 'Continue to Column Check' below to configure columns and train.";
+  }
+</script>
+{% endblock %}

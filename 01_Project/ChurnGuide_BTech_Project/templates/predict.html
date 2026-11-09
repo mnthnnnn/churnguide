@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-center">
+  <h1 class="header-title">Check one customer</h1>
+  <p class="header-subtitle">Select your business, enter customer attributes, and calculate individual churn risk with predictive drivers.</p>
+</div>
+
+<!-- Business Selector & Management Bar -->
+<div class="card" style="margin-bottom: 24px; padding: 20px 24px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <!-- Left: Business Selector Dropdown -->
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <label for="business-picker" style="font-size: 13px; font-weight: 700; color: #374151; white-space: nowrap;">
+        Active Business:
+      </label>
+      <select id="business-picker" class="form-control" style="width: auto; min-width: 260px; font-weight: 600;" onchange="switchBusiness(this.value)">
+        {% for proj in all_projects %}
+        <option value="{{ proj.id }}" {% if proj.id == active_id %}selected{% endif %}>
+          {{ proj.name }} ({{ proj.business_label }})
+        </option>
+        {% endfor %}
+      </select>
+      <span class="badge badge-success" style="font-size: 12px; padding: 5px 12px;">
+        {{ active_metadata.winner_model or 'Trained Pipeline' }}
+      </span>
+      <span style="font-size: 12.5px; color: #6b7280;">
+        &bull; {{ active_config.business_label }} &bull; {{ numeric_features|length + categorical_features|length }} features
+      </span>
+    </div>
+
+    <!-- Right: Train / Upload Business Toggle Button -->
+    <div>
+      <button type="button" class="btn btn-outline" id="toggle-train-btn" onclick="toggleTrainPanel()" style="font-size: 13px; padding: 8px 18px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>+ Add / Train New Business</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Collapsible Add/Train New Business Drawer -->
+  <div id="train-business-drawer" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+    <div style="margin-bottom: 16px;">
+      <h3 style="font-size: 16px; font-weight: 700; color: #111827; margin-bottom: 4px;">Train &amp; Deploy a New Business Model</h3>
+      <p style="font-size: 13px; color: #6b7280; margin-bottom: 0;">Upload your business customer snapshot or pick an industry benchmark to train an isolated ML pipeline.</p>
+    </div>
+
+    <form action="{{ url_for('predict_train_business') }}" method="POST" enctype="multipart/form-data" id="train-biz-form" onsubmit="showTrainingSpinner()">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Business / Company Name</label>
+          <input type="text" name="business_name" class="form-control" placeholder="e.g. Apex FinTech Solutions, Nova Retail" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Industry Context</label>
+          <input type="text" name="business_label" class="form-control" placeholder="e.g. FinTech, E-Commerce, SaaS, Healthcare" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Churn Definition</label>
+          <input type="text" name="churn_definition" class="form-control" placeholder="e.g. Account lapsed or cancelled subscription" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label style="font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px;">Observation Window</label>
+          <input type="text" name="outcome_window" class="form-control" value="30 days post-observation" required>
+        </div>
+      </div>
+
+      <!-- Data Source Selection -->
+      <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 16px;">
+        <label style="font-size: 12px; font-weight: 700; color: #374151; display: block; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em;">
+          Select Customer Data Source
+        </label>
+        
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; align-items: center;">
+          <!-- Option 1: File Upload -->
+          <div style="border: 2px dashed #93c5fd; border-radius: 8px; padding: 14px; text-align: center; background: #ffffff;">
+            <div style="font-size: 12.5px; font-weight: 600; color: #1e40af; margin-bottom: 6px;">Upload Custom Business CSV</div>
+            <input type="file" name="business_csv" id="biz_csv_input" accept=".csv" class="form-control" style="font-size: 12px; padding: 6px 10px;">
+            <div style="font-size: 11px; color: #6b7280; margin-top: 4px;">Snapshot with binary churn column (minimum 50 rows)</div>
+          </div>
+
+          <!-- Option 2: Pre-Loaded Templates -->
+          <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px; background: #ffffff;">
+            <div style="font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 8px;">Or Start With Industry Benchmark:</div>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; margin-bottom: 6px; cursor: pointer;">
+              <input type="radio" name="sample_template" value="saas" checked onclick="clearFileInput()">
+              <span><strong>B2B Cloud SaaS</strong> (1,200 accounts, subscription metrics)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; cursor: pointer;">
+              <input type="radio" name="sample_template" value="telecom" onclick="clearFileInput()">
+              <span><strong>Telecommunications</strong> (7,043 customers, contract metrics)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px;">
+        <button type="button" class="btn btn-outline" onclick="toggleTrainPanel()">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="btn-submit-train">
+          <span>Train &amp; Activate Business &rarr;</span>
+        </button>
+      </div>
+
+      <div id="train-spinner" style="display: none; text-align: center; padding: 14px; margin-top: 12px; background: #f0fdf4; border-radius: 8px; color: #166534; font-size: 13px; font-weight: 600;">
+        <div style="display: inline-block; width: 14px; height: 14px; border: 2px solid #166534; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 8px;"></div>
+        Evaluating Logistic Regression, Random Forest, &amp; Gradient Boosting via 5-Fold Stratified CV...
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Customer Profile Form Card -->
+<div class="card" style="margin-bottom: 28px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid #e5e7eb; padding-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+    <div>
+      <h2 class="card-title" style="margin-bottom: 2px;">Customer Profile Assessment</h2>
+      <p class="card-subtitle" style="margin-bottom: 0;">
+        Schema configured for: <strong>{{ active_config.name }}</strong> ({{ active_config.business_label }})
+      </p>
+    </div>
+
+    <!-- Quick Test Preset Buttons -->
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <span style="font-size: 11.5px; font-weight: 600; color: #6b7280;">Test Profiles:</span>
+      <button type="button" class="btn btn-outline" style="font-size: 11.5px; padding: 4px 10px;" onclick="applyProfile('typical')">
+        Baseline Typical
+      </button>
+      <button type="button" class="btn btn-outline" style="font-size: 11.5px; padding: 4px 10px; color: #dc2626; border-color: #fca5a5;" onclick="applyProfile('at_risk')">
+        At-Risk Sample
+      </button>
+      <button type="button" class="btn btn-outline" style="font-size: 11.5px; padding: 4px 10px; color: #16a34a; border-color: #86efac;" onclick="applyProfile('loyal')">
+        Loyal Sample
+      </button>
+    </div>
+  </div>
+
+  <form id="predict-form" action="{{ url_for('predict') }}" method="POST">
+    <div class="form-grid">
+      <!-- Numeric Feature Inputs -->
+      {% for col in numeric_features %}
+      <div class="form-group">
+        <label for="field-{{ col }}">{{ col }} <span style="font-size: 11px; color: #6b7280;">(Numeric)</span></label>
+        <input type="number" step="any" class="form-control" name="{{ col }}" id="field-{{ col }}" value="{{ form_values.get(col, 0) }}" required>
+      </div>
+      {% endfor %}
+
+      <!-- Categorical Feature Selects -->
+      {% for col in categorical_features %}
+      <div class="form-group">
+        <label for="field-{{ col }}">{{ col }} <span style="font-size: 11px; color: #6b7280;">(Category)</span></label>
+        <select class="form-control" name="{{ col }}" id="field-{{ col }}" required>
+          {% for level in category_levels.get(col, []) %}
+          <option value="{{ level }}" {% if form_values.get(col)|string == level|string %}selected{% endif %}>{{ level }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="card-footer" style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <span class="footer-note">Estimates probability via <strong>{{ active_metadata.winner_model or 'the trained model' }}</strong> with perturbation sensitivity.</span>
+      <button type="submit" class="btn btn-primary" id="btn-predict">Calculate Churn Risk &rarr;</button>
+    </div>
+  </form>
+</div>
+
+{% if prediction_result %}
+<!-- Prediction Result Card -->
+<div class="card" id="results-panel" style="border-top: 5px solid {% if prediction_result.level == 'High' %}#ef4444{% elif prediction_result.level == 'Medium' %}#f59e0b{% else %}#10b981{% endif %};">
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <span style="font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Individual Prediction Assessment</span>
+      <h2 style="font-size: 26px; font-weight: 800; color: #111827; margin-top: 4px;">Estimated Churn Probability</h2>
+      <p style="font-size: 13.5px; color: #6b7280; margin-bottom: 0;">
+        Evaluated for: <strong>{{ active_config.name }}</strong> ({{ active_config.business_label }}) &bull; Model: <strong>{{ active_metadata.winner_model }}</strong>
+      </p>
+    </div>
+    <div style="text-align: right;">
+      <div style="font-size: 38px; font-weight: 800; color: {% if prediction_result.level == 'High' %}#dc2626{% elif prediction_result.level == 'Medium' %}#d97706{% else %}#16a34a{% endif %};">
+        {{ prediction_result.percentage }}%
+      </div>
+      <span class="badge {{ prediction_result.badge_class }}" style="font-size: 13px; padding: 6px 16px;">
+        {{ prediction_result.level }} Risk Tier
+      </span>
+    </div>
+  </div>
+
+  <!-- Drivers & Sensitivity Split -->
+  <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; margin-top: 20px;">
+    <!-- Marginal Sensitivity Attribution -->
+    <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px;">
+      <div style="margin-bottom: 14px;">
+        <h3 style="font-size: 14px; font-weight: 700; color: #111827;">Model Sensitivity Analysis</h3>
+        <span style="font-size: 11.5px; color: #6b7280;">
+          Feature impact relative to training baseline
+        </span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        {% for driver in prediction_result.top_risk_drivers %}
+        <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span style="font-weight: 700; font-size: 13px; color: #111827;">{{ driver.feature }}</span>
+            <span class="{% if driver.direction == 'increases_risk' %}pill-risk-inc{% else %}pill-risk-dec{% endif %}">
+              {{ "+ " if driver.delta_p >= 0 else "- " }}{{ driver.delta_p_pct|abs }}% probability impact
+            </span>
+          </div>
+          <div style="font-size: 12px; color: #4b5563;">
+            Customer Value: <strong>{{ driver.original_value }}</strong> &bull; Typical Baseline: <em>{{ driver.baseline_value }}</em>
+          </div>
+          <div style="font-size: 11.5px; color: #6b7280; margin-top: 4px;">
+            {{ driver.interpretation }}
+          </div>
+        </div>
+        {% else %}
+        <div style="font-size: 13px; color: #6b7280; padding: 12px;">
+          Customer attributes align closely with cohort typical baseline values.
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Suggested Actions -->
+    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 20px;">
+      <div style="margin-bottom: 14px;">
+        <span style="font-size: 11px; font-weight: 700; color: #166534; text-transform: uppercase;">Review Suggestions</span>
+        <h3 style="font-size: 14px; font-weight: 700; color: #14532d; margin-top: 2px;">Actionable Retention Guidelines</h3>
+        <span style="font-size: 11.5px; color: #15803d;">Tailored operational considerations for {{ active_config.business_label }}</span>
+      </div>
+
+      <ul style="margin-left: 18px; display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #166534;">
+        {% for act in prediction_result.suggested_actions %}
+        <li>{{ act }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<style>
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+
+<script>
+  const profileTypical = {{ typical_profile|tojson }};
+  const profileAtRisk = {{ at_risk_example|tojson }};
+  const profileLoyal = {{ loyal_example|tojson }};
+
+  function switchBusiness(projId) {
+    if (projId) {
+      window.location.href = "{{ url_for('switch_project', project_id='PLACEHOLDER') }}".replace('PLACEHOLDER', projId) + '?redirect=predict';
+    }
+  }
+
+  function toggleTrainPanel() {
+    const drawer = document.getElementById('train-business-drawer');
+    const btn = document.getElementById('toggle-train-btn');
+    if (!drawer) return;
+    if (drawer.style.display === 'none' || drawer.style.display === '') {
+      drawer.style.display = 'block';
+      if (btn) btn.innerHTML = '<span>&minus; Close Training Panel</span>';
+    } else {
+      drawer.style.display = 'none';
+      if (btn) btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span>+ Add / Train New Business</span>';
+    }
+  }
+
+  function clearFileInput() {
+    const fileInput = document.getElementById('biz_csv_input');
+    if (fileInput) fileInput.value = '';
+  }
+
+  function showTrainingSpinner() {
+    const spinner = document.getElementById('train-spinner');
+    const submitBtn = document.getElementById('btn-submit-train');
+    if (spinner) spinner.style.display = 'block';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Training Pipeline...</span>';
+    }
+  }
+
+  function applyProfile(type) {
+    let target = profileTypical;
+    if (type === 'at_risk') target = profileAtRisk;
+    if (type === 'loyal') target = profileLoyal;
+
+    if (!target) return;
+
+    for (const [key, val] of Object.entries(target)) {
+      const field = document.getElementById('field-' + key);
+      if (field) {
+        field.value = val;
+      }
+    }
+  }
+</script>
+{% endblock %}

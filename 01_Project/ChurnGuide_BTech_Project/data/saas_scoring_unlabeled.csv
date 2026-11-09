@@ -1,0 +1,201 @@
+Account_ID,Plan_Tier,Company_Size,Billing_Cycle,Payment_Method,Auto_Renew,Contract_Age_Months,User_Licenses,Monthly_Spend,Weekly_Active_Users,Support_Tickets_90d,Feature_Adoption_Score
+ACC-1156,Professional,201-1000,Monthly,Credit Card,Yes,20,10,398.07,8,3,58.4
+ACC-1920,Enterprise,51-200,Monthly,Invoice,Yes,39,73,2148.44,35,0,60.1
+ACC-1971,Enterprise,1-10,Annual,Direct Debit,No,13,107,2284.28,82,2,90.6
+ACC-1897,Enterprise,51-200,Monthly,Credit Card,Yes,1,83,2367.0,36,2,59.5
+ACC-1035,Professional,11-50,Monthly,Credit Card,Yes,4,21,492.01,8,2,69.3
+ACC-1599,Starter,1-10,Annual,Direct Debit,No,13,5,144.08,3,3,68.6
+ACC-1567,Professional,11-50,Monthly,Credit Card,Yes,12,29,631.5,21,6,78.4
+ACC-1553,Professional,1-10,Monthly,Credit Card,Yes,1,6,381.45,2,2,63.1
+ACC-1891,Enterprise,1000+,Annual,Direct Debit,Yes,33,72,2041.47,20,1,66.9
+ACC-2010,Starter,51-200,Monthly,Credit Card,Yes,5,5,128.29,4,4,50.9
+ACC-1524,Enterprise,51-200,Monthly,Direct Debit,Yes,1,78,2346.07,34,3,89.5
+ACC-1440,Starter,11-50,Monthly,Invoice,No,5,4,118.67,2,5,88.1
+ACC-2141,Starter,1-10,Annual,Credit Card,Yes,2,7,139.36,5,3,74.2
+ACC-1579,Starter,201-1000,Annual,Credit Card,Yes,12,4,121.3,3,4,48.9
+ACC-1138,Starter,1-10,Annual,Direct Debit,No,15,3,117.1,1,4,49.9
+ACC-1566,Starter,51-200,Annual,Credit Card,Yes,17,5,128.28,3,2,55.4
+ACC-2186,Professional,11-50,Monthly,Invoice,Yes,13,33,627.18,11,9,59.1
+ACC-1172,Professional,201-1000,Monthly,Credit Card,Yes,1,29,660.51,23,3,99.5
+ACC-1961,Professional,51-200,Monthly,Credit Card,No,8,38,749.84,26,3,95.6
+ACC-1610,Starter,51-200,Monthly,Credit Card,Yes,29,4,112.63,2,2,95.8
+ACC-1662,Professional,1-10,Annual,Credit Card,Yes,6,23,484.49,14,4,67.9
+ACC-1186,Professional,51-200,Monthly,Direct Debit,No,22,20,532.79,16,3,55.4
+ACC-1134,Enterprise,1000+,Annual,Credit Card,Yes,1,32,1700.39,26,4,94.1
+ACC-1418,Professional,11-50,Monthly,Credit Card,Yes,21,26,531.53,15,2,36.0
+ACC-1427,Enterprise,11-50,Monthly,Credit Card,No,21,89,2408.43,47,3,99.2
+ACC-1245,Enterprise,1-10,Monthly,Direct Debit,Yes,14,89,2218.35,65,1,39.8
+ACC-1571,Professional,51-200,Monthly,Invoice,Yes,1,22,496.4,19,0,83.2
+ACC-1226,Enterprise,1-10,Monthly,Credit Card,Yes,2,113,2412.3,108,2,44.7
+ACC-1348,Starter,1-10,Annual,Credit Card,Yes,13,2,99.63,1,6,80.4
+ACC-2071,Starter,11-50,Annual,Invoice,Yes,8,3,119.58,2,6,78.2
+ACC-1637,Starter,11-50,Annual,Direct Debit,No,13,4,116.37,3,3,44.7
+ACC-1203,Enterprise,51-200,Monthly,Invoice,Yes,15,65,2225.56,61,4,51.1
+ACC-2136,Enterprise,11-50,Monthly,Credit Card,Yes,29,49,1789.12,37,4,51.9
+ACC-1210,Professional,1-10,Annual,Direct Debit,Yes,10,23,531.86,13,4,99.5
+ACC-1701,Starter,1-10,Annual,Invoice,Yes,20,2,99.15,1,5,56.7
+ACC-1879,Starter,51-200,Annual,Direct Debit,Yes,5,7,140.11,3,3,99.5
+ACC-1314,Enterprise,1-10,Monthly,Invoice,Yes,5,151,3514.45,110,3,99.5
+ACC-1448,Starter,51-200,Monthly,Invoice,Yes,1,3,105.39,2,3,44.3
+ACC-2088,Enterprise,11-50,Monthly,Credit Card,No,6,179,3581.18,126,3,73.7
+ACC-1406,Starter,1-10,Annual,Credit Card,No,6,4,122.34,1,1,67.0
+ACC-1375,Starter,1-10,Monthly,Invoice,No,1,7,170.15,6,4,99.5
+ACC-2011,Enterprise,51-200,Monthly,Credit Card,No,23,94,2503.68,48,2,85.2
+ACC-1972,Professional,1-10,Monthly,Credit Card,Yes,1,19,451.35,13,5,38.3
+ACC-1694,Starter,11-50,Monthly,Credit Card,Yes,12,4,123.11,2,5,36.5
+ACC-1167,Starter,201-1000,Monthly,Credit Card,Yes,60,3,122.16,2,3,79.1
+ACC-1654,Professional,201-1000,Annual,Credit Card,Yes,4,24,568.64,18,3,54.0
+ACC-2069,Starter,11-50,Monthly,Direct Debit,Yes,3,4,129.92,2,5,70.2
+ACC-1678,Enterprise,11-50,Monthly,Credit Card,No,12,48,1936.32,22,3,71.4
+ACC-1982,Starter,1-10,Monthly,Direct Debit,Yes,39,6,136.03,4,3,68.1
+ACC-2026,Enterprise,11-50,Monthly,Credit Card,Yes,1,105,2819.07,66,3,44.9
+ACC-1591,Professional,51-200,Annual,Invoice,Yes,6,30,736.88,23,2,47.7
+ACC-2195,Enterprise,11-50,Annual,Credit Card,Yes,11,87,2539.12,83,7,69.8
+ACC-2105,Starter,11-50,Annual,Credit Card,Yes,1,4,133.71,3,3,72.5
+ACC-1690,Starter,1-10,Monthly,Credit Card,Yes,22,4,137.57,1,3,64.6
+ACC-1528,Starter,51-200,Annual,Credit Card,Yes,7,4,130.25,3,5,34.8
+ACC-1800,Professional,11-50,Monthly,Credit Card,Yes,1,30,626.86,28,9,52.6
+ACC-1987,Professional,51-200,Monthly,Credit Card,No,9,23,557.43,17,3,63.3
+ACC-1568,Enterprise,11-50,Annual,Credit Card,No,7,59,2120.62,54,3,77.7
+ACC-1935,Starter,201-1000,Annual,Direct Debit,Yes,10,4,132.91,2,3,62.4
+ACC-1042,Starter,51-200,Annual,Credit Card,Yes,8,3,123.45,1,5,57.3
+ACC-1476,Starter,1-10,Monthly,Credit Card,Yes,11,4,136.45,2,4,81.0
+ACC-1693,Starter,1-10,Annual,Invoice,Yes,23,6,162.46,2,1,57.1
+ACC-1758,Enterprise,51-200,Annual,Direct Debit,Yes,60,138,2739.63,83,2,36.8
+ACC-1486,Starter,201-1000,Monthly,Credit Card,No,43,6,130.91,3,3,22.5
+ACC-1097,Professional,1-10,Annual,Direct Debit,Yes,27,22,538.25,14,2,73.6
+ACC-1299,Starter,201-1000,Annual,Invoice,Yes,6,5,148.16,2,3,78.9
+ACC-1746,Starter,11-50,Annual,Direct Debit,Yes,16,3,105.36,1,1,99.5
+ACC-1305,Enterprise,11-50,Annual,Credit Card,Yes,9,99,2237.72,74,4,65.7
+ACC-1005,Starter,51-200,Annual,Credit Card,Yes,46,2,103.27,1,5,61.0
+ACC-1490,Professional,1-10,Monthly,Direct Debit,Yes,13,18,556.33,16,1,54.3
+ACC-1336,Enterprise,1-10,Annual,Credit Card,Yes,3,198,4111.81,136,2,57.3
+ACC-1310,Professional,51-200,Annual,Credit Card,No,7,29,623.59,15,2,44.0
+ACC-1600,Starter,1000+,Annual,Invoice,Yes,11,5,132.53,3,4,39.7
+ACC-1968,Professional,51-200,Monthly,Credit Card,Yes,16,33,728.31,20,3,46.9
+ACC-1511,Professional,1-10,Monthly,Credit Card,Yes,22,16,529.47,12,6,17.6
+ACC-1565,Professional,11-50,Annual,Credit Card,No,7,28,542.3,22,4,67.8
+ACC-1072,Starter,51-200,Annual,Direct Debit,Yes,3,7,155.33,5,2,62.6
+ACC-1587,Starter,51-200,Monthly,Direct Debit,No,1,6,164.16,5,2,59.0
+ACC-1702,Starter,51-200,Annual,Direct Debit,Yes,7,4,131.32,2,4,57.9
+ACC-1656,Starter,51-200,Annual,Invoice,Yes,5,6,166.86,5,3,66.6
+ACC-1018,Professional,51-200,Monthly,Direct Debit,No,12,24,533.24,15,4,73.7
+ACC-1013,Starter,51-200,Monthly,Direct Debit,Yes,10,3,105.18,1,2,58.2
+ACC-1774,Professional,11-50,Monthly,Credit Card,Yes,8,13,429.23,8,8,51.2
+ACC-1807,Enterprise,51-200,Annual,Credit Card,No,8,69,2018.09,40,3,87.1
+ACC-1960,Starter,51-200,Annual,Direct Debit,No,11,3,111.97,2,3,71.1
+ACC-1895,Starter,51-200,Monthly,Direct Debit,Yes,32,6,143.19,5,6,64.3
+ACC-1802,Professional,201-1000,Monthly,Credit Card,Yes,4,18,522.91,9,3,77.0
+ACC-2117,Enterprise,11-50,Monthly,Invoice,Yes,1,176,3905.61,167,5,75.3
+ACC-2044,Enterprise,201-1000,Annual,Direct Debit,No,38,102,2399.96,57,0,56.2
+ACC-1279,Professional,11-50,Monthly,Credit Card,Yes,4,40,633.64,20,4,81.1
+ACC-1664,Starter,1000+,Annual,Direct Debit,Yes,32,5,136.09,3,3,53.9
+ACC-1067,Professional,11-50,Monthly,Credit Card,Yes,6,26,554.0,22,4,66.6
+ACC-1512,Enterprise,51-200,Annual,Credit Card,No,27,95,2384.32,89,5,49.0
+ACC-1921,Professional,11-50,Monthly,Direct Debit,Yes,1,25,597.47,23,2,99.5
+ACC-1136,Professional,1-10,Annual,Direct Debit,No,8,18,558.55,11,3,62.1
+ACC-2157,Enterprise,1-10,Monthly,Direct Debit,Yes,9,56,1780.03,30,6,69.2
+ACC-1150,Enterprise,201-1000,Monthly,Invoice,Yes,13,111,2816.71,73,4,47.1
+ACC-2085,Professional,11-50,Annual,Credit Card,Yes,1,28,592.19,26,5,29.6
+ACC-1069,Enterprise,11-50,Monthly,Credit Card,No,4,84,2554.31,53,2,49.0
+ACC-1923,Professional,11-50,Annual,Direct Debit,Yes,12,28,561.33,7,3,42.7
+ACC-1384,Professional,1000+,Annual,Invoice,No,9,26,677.67,14,2,27.0
+ACC-2106,Starter,1-10,Annual,Direct Debit,Yes,1,6,163.08,3,3,63.8
+ACC-1964,Starter,11-50,Annual,Credit Card,No,5,3,114.17,1,4,27.8
+ACC-1456,Starter,11-50,Monthly,Invoice,Yes,14,6,164.97,5,7,87.5
+ACC-1825,Enterprise,11-50,Annual,Credit Card,No,24,110,2630.85,74,4,52.4
+ACC-1204,Professional,51-200,Monthly,Credit Card,No,2,13,438.42,12,2,86.8
+ACC-1318,Starter,1-10,Annual,Direct Debit,No,15,5,120.43,2,6,52.0
+ACC-1196,Professional,11-50,Monthly,Credit Card,Yes,4,12,428.07,5,5,92.2
+ACC-1362,Professional,51-200,Annual,Credit Card,Yes,4,41,709.92,30,0,36.6
+ACC-1887,Starter,51-200,Annual,Credit Card,No,7,4,113.0,3,2,46.5
+ACC-1417,Starter,51-200,Monthly,Invoice,No,35,5,136.4,4,5,45.9
+ACC-1085,Starter,11-50,Annual,Direct Debit,No,9,4,120.58,1,6,48.3
+ACC-2051,Professional,201-1000,Annual,Direct Debit,No,11,18,539.82,10,4,55.7
+ACC-1278,Professional,51-200,Monthly,Direct Debit,Yes,26,21,479.33,17,3,59.3
+ACC-1209,Starter,201-1000,Monthly,Credit Card,Yes,1,4,137.02,3,3,58.7
+ACC-1499,Enterprise,11-50,Monthly,Credit Card,Yes,22,151,2986.98,92,2,76.4
+ACC-2019,Starter,1-10,Monthly,Invoice,Yes,20,3,119.14,2,2,61.9
+ACC-1154,Enterprise,11-50,Monthly,Credit Card,Yes,3,126,2581.28,76,0,88.8
+ACC-1779,Professional,201-1000,Annual,Credit Card,Yes,1,25,621.19,9,5,34.3
+ACC-1844,Starter,201-1000,Annual,Credit Card,Yes,34,6,129.14,2,5,58.5
+ACC-1351,Enterprise,51-200,Annual,Invoice,Yes,11,104,2231.63,85,9,78.2
+ACC-1739,Starter,1-10,Monthly,Credit Card,Yes,40,4,116.8,2,6,49.5
+ACC-1098,Starter,51-200,Annual,Invoice,Yes,4,5,144.21,3,5,77.0
+ACC-1560,Professional,11-50,Monthly,Credit Card,Yes,4,23,635.74,16,1,76.5
+ACC-1462,Professional,201-1000,Annual,Direct Debit,Yes,42,24,615.11,15,3,68.9
+ACC-1086,Professional,1-10,Monthly,Invoice,Yes,20,29,548.03,18,3,52.9
+ACC-1045,Professional,51-200,Monthly,Credit Card,Yes,20,15,454.59,8,1,73.5
+ACC-1590,Starter,1-10,Monthly,Direct Debit,Yes,9,4,116.11,3,8,47.0
+ACC-1304,Professional,11-50,Annual,Invoice,Yes,7,36,772.4,30,3,64.8
+ACC-1228,Enterprise,51-200,Monthly,Invoice,No,22,180,3306.68,108,3,99.5
+ACC-1898,Starter,51-200,Monthly,Credit Card,No,6,5,122.7,2,1,99.5
+ACC-1332,Starter,51-200,Monthly,Direct Debit,Yes,11,5,127.87,2,6,49.2
+ACC-1103,Professional,11-50,Annual,Invoice,Yes,34,40,782.58,32,2,53.5
+ACC-1882,Starter,11-50,Annual,Direct Debit,No,6,4,130.26,2,2,70.8
+ACC-1688,Professional,51-200,Annual,Credit Card,Yes,11,18,516.46,14,2,57.2
+ACC-1429,Starter,11-50,Monthly,Credit Card,Yes,13,3,110.74,1,1,49.7
+ACC-1178,Enterprise,11-50,Monthly,Direct Debit,Yes,4,109,2836.69,67,4,91.5
+ACC-1319,Starter,201-1000,Monthly,Invoice,Yes,1,3,109.62,1,4,76.5
+ACC-2043,Professional,1000+,Annual,Credit Card,Yes,3,6,388.8,4,1,68.7
+ACC-1822,Starter,201-1000,Monthly,Direct Debit,No,52,5,122.74,3,3,97.1
+ACC-2182,Professional,201-1000,Monthly,Direct Debit,No,22,39,644.45,28,3,62.6
+ACC-1294,Starter,51-200,Annual,Direct Debit,Yes,29,5,153.89,4,6,61.0
+ACC-1188,Professional,1000+,Monthly,Credit Card,No,3,20,545.13,7,5,66.7
+ACC-1943,Enterprise,11-50,Monthly,Credit Card,No,1,118,2299.79,89,2,50.4
+ACC-1229,Professional,201-1000,Monthly,Credit Card,Yes,7,18,444.47,8,3,52.5
+ACC-2114,Professional,1000+,Annual,Credit Card,Yes,11,23,578.17,15,3,80.4
+ACC-1068,Starter,51-200,Monthly,Credit Card,Yes,2,4,124.46,3,1,36.5
+ACC-1177,Starter,11-50,Annual,Direct Debit,Yes,3,4,132.75,2,3,80.6
+ACC-1621,Starter,1-10,Monthly,Direct Debit,Yes,8,2,106.03,1,6,56.3
+ACC-1677,Starter,11-50,Monthly,Credit Card,Yes,5,2,104.39,1,5,25.1
+ACC-2123,Professional,11-50,Monthly,Credit Card,Yes,30,37,740.18,30,6,89.7
+ACC-1507,Enterprise,1-10,Monthly,Credit Card,Yes,35,162,3383.68,126,2,78.9
+ACC-1376,Enterprise,1-10,Monthly,Credit Card,No,19,122,3080.58,105,3,43.3
+ACC-2007,Enterprise,201-1000,Annual,Credit Card,No,1,86,2006.85,58,4,67.6
+ACC-1787,Professional,11-50,Monthly,Credit Card,Yes,23,21,556.73,16,1,29.5
+ACC-1810,Enterprise,1-10,Monthly,Credit Card,Yes,21,123,2570.69,88,5,53.9
+ACC-1141,Starter,11-50,Annual,Invoice,Yes,7,5,122.94,1,4,78.6
+ACC-1756,Professional,51-200,Annual,Credit Card,Yes,26,14,460.13,10,4,85.8
+ACC-2033,Starter,201-1000,Monthly,Invoice,Yes,13,5,145.63,3,1,47.0
+ACC-1163,Professional,51-200,Monthly,Credit Card,No,7,9,407.45,6,2,79.3
+ACC-1120,Professional,1-10,Annual,Credit Card,No,1,27,606.07,7,4,72.9
+ACC-1240,Enterprise,1000+,Monthly,Credit Card,No,36,165,3115.19,148,5,43.4
+ACC-1976,Professional,11-50,Annual,Credit Card,Yes,20,15,438.74,10,6,83.7
+ACC-1252,Enterprise,201-1000,Monthly,Direct Debit,Yes,6,123,2606.77,85,2,45.9
+ACC-1095,Professional,1-10,Monthly,Credit Card,Yes,19,15,446.52,9,2,52.4
+ACC-1529,Enterprise,51-200,Monthly,Credit Card,Yes,26,96,2492.57,63,4,32.6
+ACC-1352,Professional,51-200,Monthly,Invoice,No,1,28,601.21,20,3,59.1
+ACC-1431,Professional,11-50,Annual,Credit Card,Yes,40,15,505.15,12,4,63.0
+ACC-1617,Starter,51-200,Monthly,Credit Card,Yes,7,3,110.3,1,4,69.9
+ACC-1309,Starter,51-200,Monthly,Credit Card,No,24,4,118.19,2,3,41.9
+ACC-1437,Enterprise,1-10,Monthly,Direct Debit,Yes,2,89,2543.92,62,2,26.0
+ACC-1870,Starter,51-200,Monthly,Invoice,No,10,4,129.3,2,4,84.9
+ACC-1161,Professional,1-10,Annual,Direct Debit,Yes,6,16,442.69,14,6,54.5
+ACC-1902,Starter,1-10,Monthly,Credit Card,Yes,1,4,137.22,2,3,57.0
+ACC-1772,Starter,11-50,Monthly,Credit Card,No,15,3,104.86,2,5,78.1
+ACC-1627,Professional,1000+,Annual,Direct Debit,Yes,17,31,727.16,21,6,75.6
+ACC-1681,Starter,201-1000,Annual,Direct Debit,Yes,4,6,129.98,5,6,65.3
+ACC-1266,Professional,1000+,Monthly,Credit Card,Yes,56,20,586.9,12,3,72.0
+ACC-1861,Professional,11-50,Monthly,Credit Card,Yes,34,4,341.51,2,3,99.5
+ACC-1206,Starter,201-1000,Monthly,Credit Card,No,5,3,112.71,1,2,39.3
+ACC-1909,Starter,1000+,Monthly,Invoice,No,10,5,123.63,4,0,61.1
+ACC-1725,Enterprise,1-10,Annual,Invoice,Yes,2,168,3044.85,65,3,64.7
+ACC-1221,Professional,11-50,Annual,Credit Card,Yes,18,6,360.55,5,1,54.8
+ACC-2130,Professional,11-50,Monthly,Credit Card,Yes,5,28,658.82,23,4,52.4
+ACC-2116,Starter,11-50,Monthly,Direct Debit,No,23,7,166.65,3,5,68.6
+ACC-2148,Enterprise,11-50,Monthly,Credit Card,Yes,9,113,2492.07,85,6,58.4
+ACC-1801,Starter,1-10,Monthly,Credit Card,Yes,2,2,101.17,1,5,58.8
+ACC-1768,Starter,11-50,Annual,Credit Card,No,30,2,102.8,1,4,66.9
+ACC-1948,Enterprise,11-50,Monthly,Direct Debit,No,30,98,2297.74,72,6,63.7
+ACC-1580,Professional,1-10,Monthly,Credit Card,Yes,30,35,715.04,15,6,71.4
+ACC-1754,Starter,1000+,Monthly,Credit Card,No,1,5,122.49,3,2,83.9
+ACC-1805,Professional,51-200,Annual,Direct Debit,Yes,23,43,821.54,32,5,37.9
+ACC-2119,Starter,11-50,Monthly,Invoice,Yes,12,6,151.11,4,3,57.4
+ACC-1373,Professional,201-1000,Monthly,Direct Debit,Yes,35,31,723.04,21,4,75.6
+ACC-1973,Starter,201-1000,Annual,Direct Debit,Yes,8,5,134.78,4,5,79.2
+ACC-1594,Enterprise,1-10,Monthly,Direct Debit,Yes,20,105,2387.22,62,2,78.4
+ACC-1839,Professional,11-50,Monthly,Credit Card,Yes,49,27,524.7,16,7,69.5
+ACC-1084,Starter,11-50,Monthly,Direct Debit,Yes,4,5,139.2,4,1,67.3
+ACC-2055,Starter,11-50,Monthly,Credit Card,No,2,5,119.7,4,4,65.5
+ACC-1409,Starter,11-50,Annual,Credit Card,Yes,40,4,125.32,2,3,82.5
